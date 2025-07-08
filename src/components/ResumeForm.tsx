@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useCallback, useMemo, useRef, useEffect } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
+import type { Control } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
@@ -16,7 +17,19 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
-import { Plus, Trash2, Award, BookOpen } from "lucide-react";
+import {
+  Plus,
+  Trash2,
+  Award,
+  BookOpen,
+  Heart,
+  User,
+  Briefcase,
+  GraduationCap,
+  Wrench,
+  Globe,
+  Languages,
+} from "lucide-react";
 import type { ResumeData } from "../types/resume";
 
 // Schema de validación actualizado con Zod
@@ -116,12 +129,290 @@ interface ResumeFormProps {
   onUpdate: (data: ResumeData) => void;
 }
 
+// Componente para manejar highlights de trabajo - RECIBE CONTROL COMO PROP
+interface WorkHighlightsProps {
+  workIndex: number;
+  control: Control<ResumeData>;
+}
+
+const WorkHighlights: React.FC<WorkHighlightsProps> = ({
+  workIndex,
+  control,
+}) => {
+  const {
+    fields: highlightFields,
+    append: appendHighlight,
+    remove: removeHighlight,
+  } = useFieldArray({
+    control,
+    name: `work.${workIndex}.highlights` as const,
+  });
+
+  const handleAddHighlight = useCallback(() => {
+    console.log("Adding highlight for work index:", workIndex);
+    appendHighlight("");
+  }, [appendHighlight, workIndex]);
+
+  const handleRemoveHighlight = useCallback(
+    (index: number) => {
+      removeHighlight(index);
+    },
+    [removeHighlight]
+  );
+
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center justify-between">
+        <FormLabel>Logros destacados</FormLabel>
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={handleAddHighlight}
+        >
+          <Plus className="h-4 w-4 mr-1" />
+          Añadir logro
+        </Button>
+      </div>
+      {highlightFields.map((field, highlightIndex) => (
+        <div key={field.id} className="flex gap-2">
+          <FormField
+            control={control}
+            name={`work.${workIndex}.highlights.${highlightIndex}` as const}
+            render={({ field: inputField }) => (
+              <FormItem className="flex-1">
+                <FormControl>
+                  <Textarea
+                    placeholder="Describe un logro específico..."
+                    className="min-h-[60px]"
+                    {...inputField}
+                    value={inputField.value || ""}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => handleRemoveHighlight(highlightIndex)}
+          >
+            <Trash2 className="h-4 w-4" />
+          </Button>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+// Componente para manejar cursos de educación - RECIBE CONTROL COMO PROP
+interface EducationCoursesProps {
+  educationIndex: number;
+  control: Control<ResumeData>;
+}
+
+const EducationCourses: React.FC<EducationCoursesProps> = ({
+  educationIndex,
+  control,
+}) => {
+  const {
+    fields: courseFields,
+    append: appendCourse,
+    remove: removeCourse,
+  } = useFieldArray({
+    control,
+    name: `education.${educationIndex}.courses` as const,
+  });
+
+  const handleAddCourse = useCallback(() => {
+    console.log("Adding course for education index:", educationIndex);
+    appendCourse("");
+  }, [appendCourse, educationIndex]);
+
+  const handleRemoveCourse = useCallback(
+    (index: number) => {
+      removeCourse(index);
+    },
+    [removeCourse]
+  );
+
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center justify-between">
+        <FormLabel>Cursos relevantes</FormLabel>
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={handleAddCourse}
+        >
+          <Plus className="h-4 w-4 mr-1" />
+          Añadir curso
+        </Button>
+      </div>
+      {courseFields.map((field, courseIndex) => (
+        <div key={field.id} className="flex gap-2">
+          <FormField
+            control={control}
+            name={`education.${educationIndex}.courses.${courseIndex}` as const}
+            render={({ field: inputField }) => (
+              <FormItem className="flex-1">
+                <FormControl>
+                  <Input
+                    placeholder="Nombre del curso"
+                    {...inputField}
+                    value={inputField.value || ""}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => handleRemoveCourse(courseIndex)}
+          >
+            <Trash2 className="h-4 w-4" />
+          </Button>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+// Componente para manejar keywords de intereses - RECIBE CONTROL COMO PROP
+interface InterestKeywordsProps {
+  interestIndex: number;
+  control: Control<ResumeData>;
+}
+
+const InterestKeywords: React.FC<InterestKeywordsProps> = ({
+  interestIndex,
+  control,
+}) => {
+  const {
+    fields: keywordFields,
+    append: appendKeyword,
+    remove: removeKeyword,
+  } = useFieldArray({
+    control,
+    name: `interests.${interestIndex}.keywords` as const,
+  });
+
+  const handleAddKeyword = useCallback(() => {
+    console.log("Adding keyword for interest index:", interestIndex);
+    appendKeyword("");
+  }, [appendKeyword, interestIndex]);
+
+  const handleRemoveKeyword = useCallback(
+    (index: number) => {
+      removeKeyword(index);
+    },
+    [removeKeyword]
+  );
+
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center justify-between">
+        <FormLabel>Palabras clave</FormLabel>
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={handleAddKeyword}
+        >
+          <Plus className="h-4 w-4 mr-1" />
+          Añadir palabra
+        </Button>
+      </div>
+      {keywordFields.map((field, keywordIndex) => (
+        <div key={field.id} className="flex gap-2">
+          <FormField
+            control={control}
+            name={
+              `interests.${interestIndex}.keywords.${keywordIndex}` as const
+            }
+            render={({ field: inputField }) => (
+              <FormItem className="flex-1">
+                <FormControl>
+                  <Input
+                    placeholder="ej. JavaScript, React..."
+                    {...inputField}
+                    value={inputField.value || ""}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => handleRemoveKeyword(keywordIndex)}
+          >
+            <Trash2 className="h-4 w-4" />
+          </Button>
+        </div>
+      ))}
+    </div>
+  );
+};
+
 export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onUpdate }) => {
+  // Ref para evitar actualizaciones circulares
+  const isUpdatingRef = useRef(false);
+  const lastDataRef = useRef<string>("");
+
+  // Memoizar los valores por defecto para evitar re-creaciones
+  const defaultValues = useMemo(() => {
+    const normalized = {
+      ...data,
+      work:
+        data.work?.map((w) => ({
+          ...w,
+          highlights: w.highlights || [],
+        })) || [],
+      education:
+        data.education?.map((e) => ({
+          ...e,
+          courses: e.courses || [],
+        })) || [],
+      skills: data.skills || [],
+      languages: data.languages || [],
+      certificates: data.certificates || [],
+      interests:
+        data.interests?.map((i) => ({
+          ...i,
+          keywords: i.keywords || [],
+        })) || [],
+      basics: {
+        ...data.basics,
+        profiles: data.basics?.profiles || [],
+        location: data.basics?.location || {},
+      },
+    };
+    return normalized;
+  }, []);
+
   const form = useForm<ResumeData>({
     resolver: zodResolver(resumeSchema),
-    defaultValues: data,
+    defaultValues,
     mode: "onChange",
   });
+
+  // Sincronizar con datos externos solo cuando realmente cambien
+  useEffect(() => {
+    const currentDataString = JSON.stringify(data);
+    if (currentDataString !== lastDataRef.current && !isUpdatingRef.current) {
+      lastDataRef.current = currentDataString;
+      form.reset(defaultValues);
+    }
+  }, [data, form, defaultValues]);
 
   const {
     fields: workFields,
@@ -169,6 +460,15 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onUpdate }) => {
   });
 
   const {
+    fields: interestFields,
+    append: appendInterest,
+    remove: removeInterest,
+  } = useFieldArray({
+    control: form.control,
+    name: "interests",
+  });
+
+  const {
     fields: profileFields,
     append: appendProfile,
     remove: removeProfile,
@@ -177,149 +477,126 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onUpdate }) => {
     name: "basics.profiles",
   });
 
-  // Actualizar datos en tiempo real
-  React.useEffect(() => {
+  // Callback memoizado para evitar re-creaciones
+  const handleUpdate = useCallback(
+    (value: ResumeData) => {
+      isUpdatingRef.current = true;
+      onUpdate(value);
+      // Reset flag después de un breve delay
+      setTimeout(() => {
+        isUpdatingRef.current = false;
+      }, 100);
+    },
+    [onUpdate]
+  );
+
+  // Actualizar datos con debounce más agresivo
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+
     const subscription = form.watch((value) => {
-      if (form.formState.isValid) {
-        onUpdate(value as ResumeData);
+      if (timeoutId) {
+        clearTimeout(timeoutId);
       }
-    });
-    return () => subscription.unsubscribe();
-  }, [form, onUpdate]);
 
-  const onSubmit = (values: ResumeData) => {
-    onUpdate(values);
-  };
-
-  // Componente para manejar highlights de trabajo
-  const WorkHighlights: React.FC<{ workIndex: number }> = ({ workIndex }) => {
-    const {
-      fields: highlightFields,
-      append: appendHighlight,
-      remove: removeHighlight,
-    } = useFieldArray({
-      control: form.control,
-      name: `work.${workIndex}.highlights`,
+      timeoutId = setTimeout(() => {
+        if (form.formState.isValid && !isUpdatingRef.current) {
+          const currentValueString = JSON.stringify(value);
+          if (currentValueString !== lastDataRef.current) {
+            lastDataRef.current = currentValueString;
+            handleUpdate(value as ResumeData);
+          }
+        }
+      }, 500); // Debounce más largo
     });
 
-    return (
-      <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <FormLabel>Logros destacados</FormLabel>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() => appendHighlight("")}
-          >
-            <Plus className="h-4 w-4 mr-1" />
-            Añadir logro
-          </Button>
-        </div>
-        {highlightFields.map((field, index) => (
-          <div key={field.id} className="flex gap-2">
-            <FormField
-              control={form.control}
-              name={`work.${workIndex}.highlights.${index}`}
-              render={({ field }) => (
-                <FormItem className="flex-1">
-                  <FormControl>
-                    <Textarea
-                      placeholder="Describe un logro específico..."
-                      className="min-h-[60px]"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => removeHighlight(index)}
-            >
-              <Trash2 className="h-4 w-4" />
-            </Button>
-          </div>
-        ))}
-      </div>
-    );
-  };
+    return () => {
+      subscription.unsubscribe();
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
+  }, [form, handleUpdate]);
 
-  // Componente para manejar cursos de educación
-  const EducationCourses: React.FC<{ educationIndex: number }> = ({
-    educationIndex,
-  }) => {
-    const {
-      fields: courseFields,
-      append: appendCourse,
-      remove: removeCourse,
-    } = useFieldArray({
-      control: form.control,
-      name: `education.${educationIndex}.courses`,
+  const onSubmit = useCallback(
+    (values: ResumeData) => {
+      handleUpdate(values);
+    },
+    [handleUpdate]
+  );
+
+  // Callbacks memoizados para los botones principales
+  const handleAppendWork = useCallback(() => {
+    appendWork({
+      name: "",
+      position: "",
+      startDate: "",
+      endDate: "",
+      summary: "",
+      highlights: [],
     });
+  }, [appendWork]);
 
-    return (
-      <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <FormLabel>Cursos relevantes</FormLabel>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() => appendCourse("")}
-          >
-            <Plus className="h-4 w-4 mr-1" />
-            Añadir curso
-          </Button>
-        </div>
-        {courseFields.map((field, index) => (
-          <div key={field.id} className="flex gap-2">
-            <FormField
-              control={form.control}
-              name={`education.${educationIndex}.courses.${index}`}
-              render={({ field }) => (
-                <FormItem className="flex-1">
-                  <FormControl>
-                    <Input placeholder="Nombre del curso" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => removeCourse(index)}
-            >
-              <Trash2 className="h-4 w-4" />
-            </Button>
-          </div>
-        ))}
-      </div>
-    );
-  };
+  const handleAppendEducation = useCallback(() => {
+    appendEducation({
+      institution: "",
+      area: "",
+      studyType: "",
+      startDate: "",
+      endDate: "",
+      courses: [],
+    });
+  }, [appendEducation]);
+
+  const handleAppendSkill = useCallback(() => {
+    appendSkill({ name: "", level: "", keywords: [] });
+  }, [appendSkill]);
+
+  const handleAppendLanguage = useCallback(() => {
+    appendLanguage({ language: "", fluency: "" });
+  }, [appendLanguage]);
+
+  const handleAppendCertificate = useCallback(() => {
+    appendCertificate({
+      name: "",
+      date: "",
+      issuer: "",
+      url: "",
+    });
+  }, [appendCertificate]);
+
+  const handleAppendInterest = useCallback(() => {
+    appendInterest({
+      name: "",
+      keywords: [],
+    });
+  }, [appendInterest]);
+
+  const handleAppendProfile = useCallback(() => {
+    appendProfile({ network: "", username: "", url: "" });
+  }, [appendProfile]);
 
   return (
     <div className="resume-form">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <Tabs defaultValue="basics" className="w-full">
-            <TabsList className="grid w-full grid-cols-5">
+            <TabsList className="grid w-full grid-cols-6">
               <TabsTrigger value="basics">Básicos</TabsTrigger>
               <TabsTrigger value="experience">Experiencia</TabsTrigger>
               <TabsTrigger value="education">Educación</TabsTrigger>
               <TabsTrigger value="skills">Habilidades</TabsTrigger>
               <TabsTrigger value="certificates">Certificados</TabsTrigger>
+              <TabsTrigger value="interests">Intereses</TabsTrigger>
             </TabsList>
 
             <TabsContent value="basics" className="space-y-4">
               <Card>
                 <CardHeader>
-                  <CardTitle>Información Personal</CardTitle>
+                  <CardTitle className="flex items-center gap-2">
+                    <User className="h-5 w-5" />
+                    Información Personal
+                  </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <FormField
@@ -423,7 +700,10 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onUpdate }) => {
 
               <Card>
                 <CardHeader>
-                  <CardTitle>Ubicación</CardTitle>
+                  <CardTitle className="flex items-center gap-2">
+                    <Globe className="h-5 w-5" />
+                    Ubicación
+                  </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
@@ -469,9 +749,7 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onUpdate }) => {
                       type="button"
                       variant="outline"
                       size="sm"
-                      onClick={() =>
-                        appendProfile({ network: "", username: "", url: "" })
-                      }
+                      onClick={handleAppendProfile}
                     >
                       <Plus className="h-4 w-4 mr-2" />
                       Añadir
@@ -540,21 +818,15 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onUpdate }) => {
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center justify-between">
-                    Experiencia Laboral
+                    <div className="flex items-center gap-2">
+                      <Briefcase className="h-5 w-5" />
+                      Experiencia Laboral
+                    </div>
                     <Button
                       type="button"
                       variant="outline"
                       size="sm"
-                      onClick={() =>
-                        appendWork({
-                          name: "",
-                          position: "",
-                          startDate: "",
-                          endDate: "",
-                          summary: "",
-                          highlights: [],
-                        })
-                      }
+                      onClick={handleAppendWork}
                     >
                       <Plus className="h-4 w-4 mr-2" />
                       Añadir Trabajo
@@ -659,7 +931,10 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onUpdate }) => {
 
                       <Separator />
 
-                      <WorkHighlights workIndex={index} />
+                      <WorkHighlights
+                        workIndex={index}
+                        control={form.control}
+                      />
                     </div>
                   ))}
                 </CardContent>
@@ -671,23 +946,14 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onUpdate }) => {
                 <CardHeader>
                   <CardTitle className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <BookOpen className="h-5 w-5" />
+                      <GraduationCap className="h-5 w-5" />
                       Educación
                     </div>
                     <Button
                       type="button"
                       variant="outline"
                       size="sm"
-                      onClick={() =>
-                        appendEducation({
-                          institution: "",
-                          area: "",
-                          studyType: "",
-                          startDate: "",
-                          endDate: "",
-                          courses: [],
-                        })
-                      }
+                      onClick={handleAppendEducation}
                     >
                       <Plus className="h-4 w-4 mr-2" />
                       Añadir Educación
@@ -808,7 +1074,10 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onUpdate }) => {
 
                       <Separator />
 
-                      <EducationCourses educationIndex={index} />
+                      <EducationCourses
+                        educationIndex={index}
+                        control={form.control}
+                      />
                     </div>
                   ))}
                 </CardContent>
@@ -819,14 +1088,15 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onUpdate }) => {
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center justify-between">
-                    Habilidades
+                    <div className="flex items-center gap-2">
+                      <Wrench className="h-5 w-5" />
+                      Habilidades
+                    </div>
                     <Button
                       type="button"
                       variant="outline"
                       size="sm"
-                      onClick={() =>
-                        appendSkill({ name: "", level: "", keywords: [] })
-                      }
+                      onClick={handleAppendSkill}
                     >
                       <Plus className="h-4 w-4 mr-2" />
                       Añadir Habilidad
@@ -880,14 +1150,15 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onUpdate }) => {
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center justify-between">
-                    Idiomas
+                    <div className="flex items-center gap-2">
+                      <Languages className="h-5 w-5" />
+                      Idiomas
+                    </div>
                     <Button
                       type="button"
                       variant="outline"
                       size="sm"
-                      onClick={() =>
-                        appendLanguage({ language: "", fluency: "" })
-                      }
+                      onClick={handleAppendLanguage}
                     >
                       <Plus className="h-4 w-4 mr-2" />
                       Añadir Idioma
@@ -951,14 +1222,7 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onUpdate }) => {
                       type="button"
                       variant="outline"
                       size="sm"
-                      onClick={() =>
-                        appendCertificate({
-                          name: "",
-                          date: "",
-                          issuer: "",
-                          url: "",
-                        })
-                      }
+                      onClick={handleAppendCertificate}
                     >
                       <Plus className="h-4 w-4 mr-2" />
                       Añadir Certificación
@@ -1048,6 +1312,72 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onUpdate }) => {
                           )}
                         />
                       </div>
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="interests" className="space-y-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Heart className="h-5 w-5" />
+                      Intereses
+                    </div>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={handleAppendInterest}
+                    >
+                      <Plus className="h-4 w-4 mr-2" />
+                      Añadir Interés
+                    </Button>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  {interestFields.map((field, index) => (
+                    <div
+                      key={field.id}
+                      className="border rounded-lg p-4 space-y-4"
+                    >
+                      <div className="flex justify-between items-center">
+                        <h4 className="font-medium">Interés #{index + 1}</h4>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => removeInterest(index)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+
+                      <FormField
+                        control={form.control}
+                        name={`interests.${index}.name`}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Nombre del interés *</FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="ej. Desarrollo de videojuegos, Fotografía..."
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <Separator />
+
+                      <InterestKeywords
+                        interestIndex={index}
+                        control={form.control}
+                      />
                     </div>
                   ))}
                 </CardContent>
