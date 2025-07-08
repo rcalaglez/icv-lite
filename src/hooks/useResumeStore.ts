@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { ResumeData, CVProfile } from "../types/resume";
+import type { ResumeData, CVProfile, Template } from "../types/resume";
 
 interface ResumeStore {
   profiles: CVProfile[];
@@ -11,7 +11,7 @@ interface ResumeStore {
   getProfileById: (id: string) => CVProfile | null;
 
   // Actions
-  createProfile: (name: string, template: string, data: ResumeData) => string;
+  createProfile: (name: string, template: Template, data: ResumeData) => string;
   updateProfile: (id: string, updates: Partial<CVProfile>) => void;
   deleteProfile: (id: string) => void;
   setActiveProfile: (id: string | null) => void;
@@ -34,7 +34,7 @@ export const useResumeStore = create<ResumeStore>()(
         return profiles.find((p) => p.id === id) || null;
       },
 
-      createProfile: (name: string, template: string, data: ResumeData) => {
+      createProfile: (name: string, template: Template, data: ResumeData) => {
         const id = crypto.randomUUID();
         const now = new Date().toISOString();
 

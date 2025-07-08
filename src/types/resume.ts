@@ -111,7 +111,7 @@ export interface ResumeData {
 export interface CVProfile {
   id: string;
   name: string;
-  template: string;
+  template: Template;
   data: ResumeData;
   createdAt: string;
   updatedAt: string;
