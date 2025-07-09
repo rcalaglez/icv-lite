@@ -107,13 +107,16 @@ export const ResumeEditor: React.FC<ResumeEditorProps> = ({ profileId }) => {
       {/* Contenido principal */}
       <div className="resume-editor-content">
         {isPreviewMode ? (
-          // Vista solo preview en móvil
           <div className="preview-only">
             <Card className="preview-card">
-              <ResumeRenderer
-                data={currentData}
-                template={profile.template.id as TemplateType}
-              />
+              <div className="preview-content">
+                <div className="cv-wrapper">
+                  <ResumeRenderer
+                    data={currentData}
+                    template={profile.template.id as TemplateType}
+                  />
+                </div>
+              </div>
             </Card>
           </div>
         ) : (
@@ -136,10 +139,12 @@ export const ResumeEditor: React.FC<ResumeEditorProps> = ({ profileId }) => {
                   )}
                 </div>
                 <div className="preview-content">
-                  <ResumeRenderer
-                    data={currentData}
-                    template={profile.template.id as TemplateType}
-                  />
+                  <div className="cv-wrapper">
+                    <ResumeRenderer
+                      data={currentData}
+                      template={profile.template.id as TemplateType}
+                    />
+                  </div>
                 </div>
               </Card>
             </div>

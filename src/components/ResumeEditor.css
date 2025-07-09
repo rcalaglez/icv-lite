@@ -95,6 +95,7 @@
   padding: 1rem 1.5rem;
   border-bottom: 1px solid #e2e8f0;
   background: #f8fafc;
+  flex-shrink: 0;
 }
 
 .preview-header h3 {
@@ -115,20 +116,46 @@
 
 .preview-content {
   flex: 1;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
   padding: 1rem;
   background: white;
+  min-height: 0;
+  height: 0;
 }
 
 .preview-only {
   grid-column: 1 / -1;
   display: flex;
   justify-content: center;
+  height: 100%;
+  overflow: hidden;
 }
 
 .preview-only .preview-card {
   width: 100%;
   max-width: 1000px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.preview-only .preview-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 2rem;
+  background: #f8fafc;
+  height: 0;
+}
+
+.cv-wrapper {
+  background: white;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  margin: 0 auto;
+  max-width: 210mm; /* Ancho A4 */
+  min-height: auto;
 }
 
 .resume-form {
@@ -181,6 +208,133 @@
 .resume-editor-error p {
   color: #6b7280;
   margin: 0;
+}
+
+.harvard-minimal {
+  font-family: "Times New Roman", serif;
+  line-height: 1.4;
+  color: #000;
+  padding: 2rem;
+  max-width: none;
+  background: white;
+}
+
+.harvard-minimal .cv-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #000;
+  padding-bottom: 1rem;
+}
+
+.harvard-minimal .cv-name {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.harvard-minimal .cv-title {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  font-style: italic;
+}
+
+.harvard-minimal .cv-contact {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.harvard-minimal .cv-contact-item {
+  white-space: nowrap;
+}
+
+.harvard-minimal .cv-contact-separator {
+  color: #666;
+}
+
+.harvard-minimal .cv-section {
+  margin-bottom: 1.5rem;
+}
+
+.harvard-minimal .cv-section-title {
+  font-size: 1.1rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  border-bottom: 1px solid #000;
+  padding-bottom: 0.25rem;
+  margin-bottom: 1rem;
+  letter-spacing: 0.5px;
+}
+
+.harvard-minimal .cv-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  page-break-inside: avoid;
+}
+
+.harvard-minimal .cv-item-content {
+  flex: 1;
+  padding-right: 1rem;
+}
+
+.harvard-minimal .cv-item-date {
+  flex-shrink: 0;
+  font-weight: bold;
+  text-align: right;
+  min-width: 120px;
+}
+
+.harvard-minimal .cv-item-title {
+  font-weight: bold;
+  margin-bottom: 0.25rem;
+}
+
+.harvard-minimal .cv-item-subtitle {
+  font-style: italic;
+  margin-bottom: 0.25rem;
+}
+
+.harvard-minimal .cv-item-description {
+  margin-bottom: 0.5rem;
+  text-align: justify;
+}
+
+.harvard-minimal .cv-item-highlights {
+  margin-top: 0.5rem;
+}
+
+.harvard-minimal .cv-item-highlights ul {
+  margin: 0;
+  padding-left: 1.5rem;
+}
+
+.harvard-minimal .cv-item-highlights li {
+  margin-bottom: 0.25rem;
+}
+
+.harvard-minimal .cv-skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.harvard-minimal .cv-skill-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.25rem 0;
+}
+
+.harvard-minimal .cv-languages-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.5rem;
 }
 
 /* Responsive Design */
@@ -244,6 +398,23 @@
   .save-indicator-actions {
     justify-content: center;
   }
+
+  /* Responsive para el CV */
+  .harvard-minimal .cv-contact {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .harvard-minimal .cv-item {
+    flex-direction: column;
+  }
+
+  .harvard-minimal .cv-item-date {
+    text-align: left;
+    margin-top: 0.5rem;
+    min-width: auto;
+  }
 }
 
 @media (max-width: 480px) {
@@ -264,40 +435,123 @@
     font-size: 0.875rem;
     padding: 0.5rem 0.75rem;
   }
+
+  .harvard-minimal {
+    padding: 1rem;
+  }
 }
 
-/* Print styles */
 @media print {
   .resume-editor-header,
   .mobile-save-indicator {
-    display: none;
+    display: none !important;
+  }
+
+  .resume-editor {
+    height: auto !important;
+    overflow: visible !important;
+    background: white !important;
   }
 
   .resume-editor-content {
-    grid-template-columns: 1fr;
-    padding: 0;
-    gap: 0;
+    grid-template-columns: 1fr !important;
+    padding: 0 !important;
+    gap: 0 !important;
+    height: auto !important;
+    overflow: visible !important;
   }
 
   .editor-panel {
-    display: none;
+    display: none !important;
   }
 
   .preview-panel {
-    display: block;
+    display: block !important;
+    height: auto !important;
+    min-height: auto !important;
   }
 
   .preview-header {
-    display: none;
+    display: none !important;
   }
 
   .preview-card {
-    box-shadow: none;
-    border: none;
+    box-shadow: none !important;
+    border: none !important;
+    height: auto !important;
+    overflow: visible !important;
   }
 
   .preview-content {
-    padding: 0;
+    padding: 0 !important;
+    overflow: visible !important;
+    height: auto !important;
+    max-height: none !important;
+    background: white !important;
+  }
+
+  .cv-wrapper {
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+    max-width: none !important;
+  }
+
+  /* Estilos específicos para impresión del CV */
+  .harvard-minimal {
+    padding: 0 !important;
+    margin: 0 !important;
+    font-size: 11pt !important;
+    line-height: 1.3 !important;
+  }
+
+  .harvard-minimal .cv-name {
+    font-size: 16pt !important;
+  }
+
+  .harvard-minimal .cv-title {
+    font-size: 12pt !important;
+  }
+
+  .harvard-minimal .cv-section-title {
+    font-size: 12pt !important;
+  }
+
+  .harvard-minimal .cv-contact {
+    justify-content: center !important;
+    flex-wrap: wrap !important;
+    gap: 0.5rem !important;
+  }
+
+  .harvard-minimal .cv-item {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: flex-start !important;
+    page-break-inside: avoid !important;
+  }
+
+  .harvard-minimal .cv-item-content {
+    flex: 1 !important;
+    padding-right: 1rem !important;
+  }
+
+  .harvard-minimal .cv-item-date {
+    flex-shrink: 0 !important;
+    text-align: right !important;
+    min-width: 120px !important;
+  }
+
+  /* Evitar saltos de página problemáticos */
+  .harvard-minimal .cv-section {
+    page-break-inside: avoid;
+  }
+
+  .harvard-minimal .cv-section-title {
+    page-break-after: avoid;
+  }
+
+  .harvard-minimal .cv-item-title {
+    page-break-after: avoid;
   }
 }
 

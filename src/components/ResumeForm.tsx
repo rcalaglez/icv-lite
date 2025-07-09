@@ -32,7 +32,6 @@ import {
 } from "lucide-react";
 import type { ResumeData } from "../types/resume";
 
-// Schema de validación actualizado con Zod
 const resumeSchema = z.object({
   basics: z.object({
     name: z.string().min(1, "El nombre es requerido"),
@@ -129,7 +128,6 @@ interface ResumeFormProps {
   onUpdate: (data: ResumeData) => void;
 }
 
-// Componente para manejar highlights de trabajo - RECIBE CONTROL COMO PROP
 interface WorkHighlightsProps {
   workIndex: number;
   control: Control<ResumeData>;
@@ -207,7 +205,6 @@ const WorkHighlights: React.FC<WorkHighlightsProps> = ({
   );
 };
 
-// Componente para manejar cursos de educación - RECIBE CONTROL COMO PROP
 interface EducationCoursesProps {
   educationIndex: number;
   control: Control<ResumeData>;
@@ -284,7 +281,6 @@ const EducationCourses: React.FC<EducationCoursesProps> = ({
   );
 };
 
-// Componente para manejar keywords de intereses - RECIBE CONTROL COMO PROP
 interface InterestKeywordsProps {
   interestIndex: number;
   control: Control<ResumeData>;
@@ -364,7 +360,6 @@ const InterestKeywords: React.FC<InterestKeywordsProps> = ({
 };
 
 export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onUpdate }) => {
-  // Ref para evitar actualizaciones circulares
   const isUpdatingRef = useRef(false);
   const lastDataRef = useRef<string>("");
 
