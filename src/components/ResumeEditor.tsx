@@ -1,46 +1,29 @@
-import React, { useState, useCallback } from "react";
+import React from "react";
 import { ResumeForm } from "./ResumeForm";
 import { ResumeRenderer } from "./ResumeRenderer";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Eye, Edit, Save, RotateCcw } from "lucide-react";
-import type { ResumeData, TemplateType } from "../types/resume";
-import { useResumeStore } from "../hooks/useResumeStore";
+import type { TemplateType } from "../types/resume";
 import "./ResumeEditor.css";
+import { useEditorState } from "@/hooks/useEditorState";
 
 interface ResumeEditorProps {
   profileId: string;
 }
 
 export const ResumeEditor: React.FC<ResumeEditorProps> = ({ profileId }) => {
-  const { getProfileById, updateProfile } = useResumeStore();
-  const profile = getProfileById(profileId);
-
-  const [currentData, setCurrentData] = useState<ResumeData>(
-    profile?.data || ({} as ResumeData)
-  );
-  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
-  const [isPreviewMode, setIsPreviewMode] = useState(false);
-
-  const handleDataUpdate = useCallback((newData: ResumeData) => {
-    setCurrentData(newData);
-    setHasUnsavedChanges(true);
-  }, []);
-
-  const handleSave = useCallback(() => {
-    if (profile) {
-      updateProfile(profileId, { data: currentData });
-      setHasUnsavedChanges(false);
-    }
-  }, [profileId, currentData, profile, updateProfile]);
-
-  const handleReset = useCallback(() => {
-    if (profile) {
-      setCurrentData(profile.data);
-      setHasUnsavedChanges(false);
-    }
-  }, [profile]);
+  const {
+    profile,
+    hasUnsavedChanges,
+    currentData,
+    handleSave,
+    handleDataUpdate,
+    handleReset,
+    setIsPreviewMode,
+    isPreviewMode,
+  } = useEditorState({ profileId });
 
   if (!profile) {
     return (
