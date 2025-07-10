@@ -89,3 +89,5 @@ const InterestKeywords: React.FC<InterestKeywordsProps> = ({
     </div>
   );
 };
+
+export default InterestKeywords;
