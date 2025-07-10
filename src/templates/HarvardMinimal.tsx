@@ -6,25 +6,11 @@ import type {
   ResumeCertificate,
 } from "../types/resume";
 import "./HarvardMinimal.css";
+import { formatDate, formatDateRange } from "@/utils/formatters";
 
 interface HarvardMinimalProps {
   data: ResumeData;
 }
-
-// Utility functions
-const formatDate = (dateString: string): string => {
-  const date = new Date(dateString);
-  return date.toLocaleDateString("es-ES", {
-    year: "numeric",
-    month: "long",
-  });
-};
-
-const formatDateRange = (startDate: string, endDate?: string): string => {
-  const start = formatDate(startDate);
-  const end = endDate ? formatDate(endDate) : "Presente";
-  return `${start} - ${end}`;
-};
 
 // Sub-components
 const ContactInfo: React.FC<{ basics: ResumeData["basics"] }> = ({
