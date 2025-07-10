@@ -117,7 +117,7 @@ export interface CVProfile {
   updatedAt: string;
 }
 
-export type TemplateType = "harvard-minimal";
+export type TemplateType = "harvard-minimal" | "harvard-most-minimal";
 
 export interface Template {
   id: TemplateType;

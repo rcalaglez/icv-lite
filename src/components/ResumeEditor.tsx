@@ -8,6 +8,15 @@ import { Eye, Edit, Save, RotateCcw } from "lucide-react";
 import type { TemplateType } from "../types/resume";
 import "./ResumeEditor.css";
 import { useEditorState } from "@/hooks/useEditorState";
+import { useResumeStore } from "@/hooks/useResumeStore";
+import { availableTemplates } from "@/templates/templates";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
 
 interface ResumeEditorProps {
   profileId: string;
@@ -24,6 +33,15 @@ export const ResumeEditor: React.FC<ResumeEditorProps> = ({ profileId }) => {
     setIsPreviewMode,
     isPreviewMode,
   } = useEditorState({ profileId });
+  const { activeTemplate, setActiveTemplate, updateProfile } = useResumeStore();
+
+  const handleTemplateChange = (templateId: TemplateType) => {
+    const newTemplate = availableTemplates.find((t) => t.id === templateId);
+    if (newTemplate && profile) {
+      setActiveTemplate(newTemplate);
+      updateProfile(profile.id, { template: newTemplate });
+    }
+  };
 
   if (!profile) {
     return (
@@ -34,15 +52,31 @@ export const ResumeEditor: React.FC<ResumeEditorProps> = ({ profileId }) => {
     );
   }
 
+  const selectedTemplate = activeTemplate || profile.template;
+
   return (
     <div className="resume-editor">
       {/* Header con controles */}
       <div className="resume-editor-header">
         <div className="header-info">
           <h2 className="profile-title">{profile.name}</h2>
-          <span className="template-badge">
-            Plantilla: {profile.template.name}
-          </span>
+          <Select
+            value={selectedTemplate.id}
+            onValueChange={(value) =>
+              handleTemplateChange(value as TemplateType)
+            }
+          >
+            <SelectTrigger className="w-[280px]">
+              <SelectValue placeholder="Seleccionar plantilla" />
+            </SelectTrigger>
+            <SelectContent>
+              {availableTemplates.map((template) => (
+                <SelectItem key={template.id} value={template.id}>
+                  {template.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         <div className="header-controls">
@@ -96,7 +130,7 @@ export const ResumeEditor: React.FC<ResumeEditorProps> = ({ profileId }) => {
                 <div className="cv-wrapper">
                   <ResumeRenderer
                     data={currentData}
-                    template={profile.template.id as TemplateType}
+                    template={selectedTemplate.id as TemplateType}
                   />
                 </div>
               </div>
@@ -125,7 +159,7 @@ export const ResumeEditor: React.FC<ResumeEditorProps> = ({ profileId }) => {
                   <div className="cv-wrapper">
                     <ResumeRenderer
                       data={currentData}
-                      template={profile.template.id as TemplateType}
+                      template={selectedTemplate.id as TemplateType}
                     />
                   </div>
                 </div>

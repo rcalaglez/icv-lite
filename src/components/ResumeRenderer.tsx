@@ -1,6 +1,5 @@
 import React, { Suspense, useMemo, lazy } from "react";
 import type { ResumeData, TemplateType } from "../types/resume";
-
 interface ResumeRendererProps {
   data: ResumeData;
   template: TemplateType;
@@ -13,11 +12,20 @@ const HarvardMinimal = lazy(() =>
   }))
 );
 
+const HarvardMostMinimal = lazy(() =>
+  import("../templates/HarvardMostMinimal").then((module) => ({
+    default: module.HarvardMostMinimal,
+  }))
+);
+
 // Registry de plantillas con lazy loading
 const templateRegistry = new Map<
   TemplateType,
   React.LazyExoticComponent<React.FC<{ data: ResumeData }>>
->([["harvard-minimal", HarvardMinimal]]);
+>([
+  ["harvard-minimal", HarvardMinimal],
+  ["harvard-most-minimal", HarvardMostMinimal],
+]);
 
 const LoadingTemplate: React.FC = () => (
   <div className="template-loading">

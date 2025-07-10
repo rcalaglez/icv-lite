@@ -5,6 +5,7 @@ import type { ResumeData, CVProfile, Template } from "../types/resume";
 interface ResumeStore {
   profiles: CVProfile[];
   activeProfileId: string | null;
+  activeTemplate: Template | null;
 
   // Getters
   getActiveProfile: () => CVProfile | null;
@@ -15,6 +16,7 @@ interface ResumeStore {
   updateProfile: (id: string, updates: Partial<CVProfile>) => void;
   deleteProfile: (id: string) => void;
   setActiveProfile: (id: string | null) => void;
+  setActiveTemplate: (template: Template | null) => void;
   duplicateProfile: (id: string, newName: string) => string;
 }
 
@@ -23,6 +25,7 @@ export const useResumeStore = create<ResumeStore>()(
     (set, get) => ({
       profiles: [],
       activeProfileId: null,
+      activeTemplate: null,
 
       getActiveProfile: () => {
         const { profiles, activeProfileId } = get();
@@ -77,6 +80,10 @@ export const useResumeStore = create<ResumeStore>()(
         set({ activeProfileId: id });
       },
 
+      setActiveTemplate: (template: Template | null) => {
+        set({ activeTemplate: template });
+      },
+
       duplicateProfile: (id: string, newName: string) => {
         const profile = get().getProfileById(id);
         if (!profile) return "";
@@ -104,6 +111,7 @@ export const useResumeStore = create<ResumeStore>()(
       partialize: (state) => ({
         profiles: state.profiles,
         activeProfileId: state.activeProfileId,
+        activeTemplate: state.activeTemplate,
       }),
     }
   )

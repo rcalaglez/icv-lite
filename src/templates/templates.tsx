@@ -1,5 +1,6 @@
 import type { Template, TemplateType } from "../types/resume";
 import { HarvardMinimal } from "./HarvardMinimal";
+import { HarvardMostMinimal } from "./HarvardMostMinimal";
 
 export const availableTemplates: Template[] = [
   {
@@ -7,6 +8,12 @@ export const availableTemplates: Template[] = [
     name: "Harvard Minimal",
     description:
       "Plantilla clásica y profesional con diseño limpio y tipografía clara. Ideal para sectores tradicionales y posiciones ejecutivas.",
+  },
+  {
+    id: "harvard-most-minimal",
+    name: "Harvard Most Minimal",
+    description:
+      "Una versión aún más minimalista de la plantilla Harvard, centrada en la legibilidad y el contenido esencial. Perfecta para roles modernos y tecnológicos.",
   },
 ];
 
@@ -18,6 +25,8 @@ export const getTemplateComponent = async (templateId: TemplateType) => {
   switch (templateId) {
     case "harvard-minimal":
       return HarvardMinimal;
+    case "harvard-most-minimal":
+      return HarvardMostMinimal;
     default:
       throw new Error(`Template ${templateId} not found`);
   }

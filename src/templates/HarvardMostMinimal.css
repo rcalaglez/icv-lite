@@ -1,0 +1,355 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat&family=STIX+Two+Text:ital,wght@0,400..700;1,400..700&display=swap");
+.harvard-most-minimal {
+  max-width: 8.7in;
+  margin: 0 auto;
+  padding: 0.5in;
+  font-family: "STIX TWO Text", Times, serif;
+  font-size: 11pt;
+  line-height: 1.4;
+  color: #000;
+  background: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Print styles */
+@media print {
+  .harvard-most-minimal {
+    box-shadow: none;
+    padding: 0.5in;
+    margin: 0;
+    max-width: none;
+  }
+}
+
+/* Header Section */
+.header {
+  text-align: center;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #000;
+  padding-bottom: 0rem;
+}
+
+.name {
+  font-size: 24pt;
+  font-weight: bold;
+  text-transform: capitalize;
+  margin: 0 0 0.25rem 0;
+  letter-spacing: 0.1px;
+}
+
+.label {
+  font-size: 12pt;
+  font-style: italic;
+  margin: 0 0 0.75rem 0;
+  color: #555;
+}
+
+.contact-info {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.contact-item {
+  font-size: 10pt;
+  white-space: nowrap;
+}
+
+.contact-item a {
+  color: #000;
+  text-decoration: none;
+}
+
+.contact-item a:hover {
+  text-decoration: underline;
+}
+
+/* Section Styles */
+.section {
+  margin-bottom: 1.15rem;
+}
+
+.section-title {
+  font-size: 12pt;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.2px;
+  margin: 0 0 0.75rem 0;
+  padding-bottom: 0.001rem;
+  border-bottom: 1px solid #000;
+}
+
+/* Summary Section */
+.summary {
+  margin: 0;
+  text-align: justify;
+  line-height: 1.25;
+  font-style: italic;
+  font-size: 10.5pt;
+  color: #333;
+}
+
+/* Work Experience */
+.work-item {
+  margin-bottom: 1rem;
+}
+
+.work-item:last-child {
+  margin-bottom: 0;
+}
+
+.work-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.25rem;
+}
+
+.position {
+  font-size: 11pt;
+  font-weight: bold;
+  margin: 0;
+}
+
+.date-range {
+  font-size: 10pt;
+  font-style: italic;
+  color: #555;
+  white-space: nowrap;
+}
+
+.company {
+  font-size: 10pt;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.company a {
+  color: #000;
+  text-decoration: none;
+}
+
+.company a:hover {
+  text-decoration: underline;
+}
+
+.work-summary {
+  margin: 0 0 0.5rem 0;
+  font-style: italic;
+  color: #333;
+}
+
+.highlights {
+  font-size: 10.5pt;
+  margin: 0;
+  padding-left: 1.15rem;
+}
+
+.highlights li {
+  margin-bottom: 0.15rem;
+}
+
+.highlights li:last-child {
+  margin-bottom: 0;
+}
+
+/* Education Section */
+.education-item {
+  margin-bottom: 0.75rem;
+}
+
+.education-item:last-child {
+  margin-bottom: 0;
+}
+
+.education-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.25rem;
+}
+
+.degree {
+  font-size: 11pt;
+  font-weight: bold;
+  margin: 0;
+}
+
+.institution {
+  font-size: 10pt;
+  margin-bottom: 0.25rem;
+}
+
+.institution a {
+  color: #000;
+  text-decoration: none;
+}
+
+.institution a:hover {
+  text-decoration: underline;
+}
+
+.score {
+  font-size: 10pt;
+  margin: 0;
+  color: #555;
+}
+
+/* Skills Section */
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.75rem;
+}
+
+.skill-item {
+  margin-bottom: 0.5rem;
+}
+
+.skill-name {
+  font-size: 11pt;
+  font-weight: bold;
+  margin: 0 0.5rem 0 0;
+  display: inline;
+}
+
+.skill-level {
+  font-size: 10pt;
+  color: #555;
+  font-style: italic;
+}
+
+.skill-keywords {
+  font-size: 10pt;
+  margin: 0.25rem 0 0 0;
+  color: #333;
+}
+
+/* Languages Section */
+.languages-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.5rem;
+}
+
+.language-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.language-name {
+  font-weight: 500;
+}
+
+.language-fluency {
+  font-size: 10pt;
+  color: #555;
+  font-style: italic;
+}
+
+/* Certificates Section */
+.certificate-item {
+  margin-bottom: 0.75rem;
+}
+
+.certificate-item:last-child {
+  margin-bottom: 0;
+}
+
+.certificate-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.25rem;
+}
+
+.certificate-name {
+  font-size: 11pt;
+  font-weight: bold;
+  margin: 0;
+}
+
+.certificate-name a {
+  color: #000;
+  text-decoration: none;
+}
+
+.certificate-name a:hover {
+  text-decoration: underline;
+}
+
+.certificate-date {
+  font-size: 10pt;
+  color: #555;
+  font-style: italic;
+}
+
+.certificate-issuer {
+  font-size: 10pt;
+  margin: 0;
+  color: #333;
+}
+
+/* Interests Section */
+.interests-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.75rem;
+}
+
+.interest-item {
+  margin-bottom: 0.5rem;
+}
+
+.interest-name {
+  font-size: 11pt;
+  font-weight: bold;
+  margin: 0 0 0.25rem 0;
+}
+
+.interest-keywords {
+  font-size: 10pt;
+  margin: 0;
+  color: #333;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .harvard-most-minimal {
+    padding: 1rem;
+    font-size: 10pt;
+  }
+
+  .name {
+    font-size: 16pt;
+  }
+
+  .section-title {
+    font-size: 16pt;
+  }
+
+  .work-header,
+  .education-header,
+  .certificate-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+
+  .contact-info {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    justify-content: center;
+  }
+
+  .skills-grid,
+  .languages-grid,
+  .interests-grid {
+    grid-template-columns: 1fr;
+  }
+}
