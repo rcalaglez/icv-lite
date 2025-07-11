@@ -19,6 +19,20 @@
     margin: 0;
     max-width: none;
   }
+
+  .name {
+    font-size: 24pt !important;
+  }
+
+  .section-title {
+    font-size: 12pt !important;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.2px;
+    margin: 0 0 0.75rem 0;
+    padding-bottom: 0.001rem;
+    border-bottom: 1px solid #000;
+  }
 }
 
 /* Header Section */
