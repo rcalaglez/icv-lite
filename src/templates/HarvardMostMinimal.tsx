@@ -5,7 +5,8 @@ import type {
   ResumeEducation,
   ResumeCertificate,
 } from "../types/resume";
-import "./HarvardMostMinimal.css";
+import { useDynamicStyles } from '@/hooks/useDynamicStyles';
+import styles from './HarvardMostMinimal.css?raw';
 import { formatDate, formatDateRange } from "@/utils/formatters";
 
 interface HarvardMostMinimalProps {
@@ -184,9 +185,9 @@ const Interests: React.FC<{
 );
 
 // Main component
-export const HarvardMostMinimal: React.FC<HarvardMostMinimalProps> = ({
-  data,
-}) => {
+export const HarvardMostMinimal: React.FC<HarvardMostMinimalProps> = ({ data }) => {
+  useDynamicStyles(styles);
+
   const {
     basics,
     work,
