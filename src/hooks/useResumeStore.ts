@@ -11,6 +11,7 @@ interface ResumeStore {
   updateProfileData: (id: string, data: ResumeData) => void;
   createProfile: () => string; // Devuelve el ID del nuevo perfil
   deleteProfile: (id: string) => void;
+  updateProfileName: (id: string, name: string) => void;
 }
 
 const useResumeStore = create<ResumeStore>()(
@@ -67,6 +68,14 @@ const useResumeStore = create<ResumeStore>()(
       deleteProfile: (id: string) => {
         set((state) => ({
           profiles: state.profiles.filter((profile) => profile.id !== id),
+        }));
+      },
+
+      updateProfileName: (id: string, name: string) => {
+        set((state) => ({
+          profiles: state.profiles.map((profile) =>
+            profile.id === id ? { ...profile, name, updatedAt: new Date().toISOString() } : profile
+          ),
         }));
       },
     }),

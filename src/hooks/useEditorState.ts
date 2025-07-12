@@ -7,7 +7,7 @@ interface UseEditorStateProps {
 }
 
 export const useEditorState = ({ profileId }: UseEditorStateProps) => {
-  const { getProfileById, updateProfileData } = useResumeStore();
+  const { getProfileById, updateProfileData, updateProfileName } = useResumeStore();
   const profile = getProfileById(profileId);
 
   const [currentData, setCurrentData] = useState<ResumeData>(
@@ -16,11 +16,16 @@ export const useEditorState = ({ profileId }: UseEditorStateProps) => {
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [isPreviewMode, setIsPreviewMode] = useState(false);
 
+  // Estado para la edición del nombre del perfil
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [editedName, setEditedName] = useState(profile?.name || "");
+
   useEffect(() => {
     // Actualizar el estado si el profileId cambia o los datos iniciales se cargan
     if (profile) {
       setCurrentData(profile.data);
       setHasUnsavedChanges(false);
+      setEditedName(profile.name); // Sincronizar el nombre editado con el nombre del perfil
     }
   }, [profileId, profile]);
 
@@ -43,6 +48,26 @@ export const useEditorState = ({ profileId }: UseEditorStateProps) => {
     }
   }, [profile]);
 
+  const handleNameChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setEditedName(e.target.value);
+  }, []);
+
+  const handleNameSave = useCallback(() => {
+    if (profile && editedName.trim() !== "" && editedName !== profile.name) {
+      updateProfileName(profile.id, editedName.trim());
+    }
+    setIsEditingName(false);
+  }, [profile, editedName, updateProfileName]);
+
+  const handleNameKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleNameSave();
+    } else if (e.key === "Escape") {
+      setEditedName(profile?.name || "");
+      setIsEditingName(false);
+    }
+  }, [profile, handleNameSave]);
+
   return {
     profile,
     hasUnsavedChanges,
@@ -52,5 +77,11 @@ export const useEditorState = ({ profileId }: UseEditorStateProps) => {
     handleReset,
     setIsPreviewMode,
     isPreviewMode,
+    isEditingName,
+    editedName,
+    setIsEditingName,
+    handleNameChange,
+    handleNameSave,
+    handleNameKeyDown,
   };
 };

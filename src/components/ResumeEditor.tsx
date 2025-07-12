@@ -16,7 +16,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Trash2, Eye, Edit, Save, RotateCcw, ChevronLeft } from "lucide-react";
+import { Trash2, Eye, Edit, Save, RotateCcw, ChevronLeft, Pencil } from "lucide-react";
 import type { TemplateType } from "../types/resume";
 import "./ResumeEditor.css";
 import { useEditorState } from "@/hooks/useEditorState";
@@ -32,7 +32,6 @@ import {
 
 export const ResumeEditor: React.FC = () => {
   const { profileId } = useParams<{ profileId: string }>();
-  const updateProfileData = useResumeStore((state) => state.updateProfileData);
   const deleteProfile = useResumeStore((state) => state.deleteProfile);
   const navigate = useNavigate();
 
@@ -57,6 +56,12 @@ export const ResumeEditor: React.FC = () => {
     handleReset,
     setIsPreviewMode,
     isPreviewMode,
+    isEditingName,
+    editedName,
+    setIsEditingName,
+    handleNameChange,
+    handleNameSave,
+    handleNameKeyDown,
   } = useEditorState({ profileId });
 
   const handleDelete = () => {
@@ -97,7 +102,24 @@ export const ResumeEditor: React.FC = () => {
               <ChevronLeft className="h-4 w-4" />
             </Link>
           </Button>
-          <h2 className="profile-title">{profile.name}</h2>
+          <h2 className="profile-title group flex items-center gap-2 cursor-pointer" onClick={() => setIsEditingName(true)}>
+            {isEditingName ? (
+              <input
+                type="text"
+                value={editedName}
+                onChange={handleNameChange}
+                onBlur={handleNameSave}
+                onKeyDown={handleNameKeyDown}
+                autoFocus
+                className="bg-transparent border-b border-blue-500 focus:outline-none focus:border-blue-700 text-xl font-semibold tracking-tight"
+              />
+            ) : (
+              <>
+                {profile.name}
+                <Pencil className="h-4 w-4 text-slate-500 opacity-0 group-hover:opacity-100 transition-opacity" />
+              </>
+            )}
+          </h2>
           <Select
             value={selectedTemplate.id}
             onValueChange={(value) =>
