@@ -1,6 +1,7 @@
 
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { availableTemplates } from "@/templates/templates";
 import type { CVProfile, ResumeData } from "../types/resume";
 import { sampleResumes } from "@/data/resumeExample";
 
@@ -8,6 +9,7 @@ interface ResumeStore {
   profiles: CVProfile[];
   getProfileById: (id: string) => CVProfile | undefined;
   updateProfileData: (id: string, data: ResumeData) => void;
+  createProfile: () => string; // Devuelve el ID del nuevo perfil
 }
 
 const useResumeStore = create<ResumeStore>()(
@@ -28,17 +30,42 @@ const useResumeStore = create<ResumeStore>()(
           ),
         }));
       },
+
+      createProfile: () => {
+        const newId = crypto.randomUUID();
+        const now = new Date().toISOString();
+        const defaultTemplate = availableTemplates[0];
+
+        const newProfile: CVProfile = {
+          id: newId,
+          name: "Nuevo Perfil",
+          template: defaultTemplate,
+          createdAt: now,
+          updatedAt: now,
+          data: {
+            basics: {
+              name: "Tu Nombre",
+              label: "Tu Profesión",
+            },
+            work: [],
+            education: [],
+            skills: [],
+            languages: [],
+            interests: [],
+            certificates: [],
+          },
+        };
+
+        set((state) => ({
+          profiles: [...state.profiles, newProfile],
+        }));
+
+        return newId;
+      },
     }),
     {
       name: "icv-resume-storage",
-      // La inicialización se maneja arriba, pero mantenemos la persistencia
-      onRehydrateStorage: (state) => {
-        // Opcional: Lógica para migrar o limpiar datos viejos si es necesario
-        console.log("Hydrating from storage...");
-        if (state && state.profiles.length === 0) {
-            state.profiles = sampleResumes;
-        }
-      },
+      
     }
   )
 );

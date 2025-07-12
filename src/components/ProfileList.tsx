@@ -1,5 +1,6 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useResumeStore from "@/hooks/useResumeStore";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardHeader,
@@ -10,13 +11,27 @@ import {
 
 const ProfileList = () => {
   const profiles = useResumeStore((state) => state.profiles);
+  const createProfile = useResumeStore((state) => state.createProfile);
+  const navigate = useNavigate();
+
+  const handleCreateProfile = () => {
+    const newProfileId = createProfile();
+    navigate(`/profile/${newProfileId}`);
+  };
 
   return (
     <div className="container mx-auto p-4 md:p-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight">Mis Perfiles de CV</h1>
-        <p className="text-muted-foreground">Selecciona un perfil para ver, editar o exportar.</p>
+      <div className="mb-8 bg-slate-900 text-white -mx-4 md:-mx-8 -mt-4 md:-mt-8 p-4 shadow-lg">
+        <div className="max-w-7xl mx-auto flex justify-between items-center">
+          <h1 className="text-5xl font-extrabold tracking-tight">
+            <span className="text-blue-500">i</span>CV
+          </h1>
+          <Button onClick={handleCreateProfile} size="lg">
+            Crear Nuevo Perfil
+          </Button>
+        </div>
       </div>
+
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
         {profiles.map((profile) => (
           <Link to={`/profile/${profile.id}`} key={profile.id} className="block hover:no-underline group">
