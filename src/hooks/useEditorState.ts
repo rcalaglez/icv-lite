@@ -1,13 +1,13 @@
-import { useCallback, useState } from "react";
-import { type ResumeData } from "../types/resume";
-import { useResumeStore } from "./useResumeStore";
+import { useCallback, useState, useEffect } from "react";
+import type { ResumeData } from "../types/resume";
+import useResumeStore from "./useResumeStore";
 
 interface UseEditorStateProps {
   profileId: string;
 }
 
 export const useEditorState = ({ profileId }: UseEditorStateProps) => {
-  const { getProfileById, updateProfile } = useResumeStore();
+  const { getProfileById, updateProfileData } = useResumeStore();
   const profile = getProfileById(profileId);
 
   const [currentData, setCurrentData] = useState<ResumeData>(
@@ -16,6 +16,14 @@ export const useEditorState = ({ profileId }: UseEditorStateProps) => {
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [isPreviewMode, setIsPreviewMode] = useState(false);
 
+  useEffect(() => {
+    // Actualizar el estado si el profileId cambia o los datos iniciales se cargan
+    if (profile) {
+      setCurrentData(profile.data);
+      setHasUnsavedChanges(false);
+    }
+  }, [profileId, profile]);
+
   const handleDataUpdate = useCallback((newData: ResumeData) => {
     setCurrentData(newData);
     setHasUnsavedChanges(true);
@@ -23,10 +31,10 @@ export const useEditorState = ({ profileId }: UseEditorStateProps) => {
 
   const handleSave = useCallback(() => {
     if (profile) {
-      updateProfile(profileId, { data: currentData });
+      updateProfileData(profileId, currentData);
       setHasUnsavedChanges(false);
     }
-  }, [profileId, currentData, profile, updateProfile]);
+  }, [profileId, currentData, profile, updateProfileData]);
 
   const handleReset = useCallback(() => {
     if (profile) {

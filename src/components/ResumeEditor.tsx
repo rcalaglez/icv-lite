@@ -1,14 +1,15 @@
 import React from "react";
+import { useParams, Link } from "react-router-dom";
 import { ResumeForm } from "./ResumeForm";
 import { ResumeRenderer } from "./ResumeRenderer";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Eye, Edit, Save, RotateCcw } from "lucide-react";
+import { Eye, Edit, Save, RotateCcw, ChevronLeft } from "lucide-react";
 import type { TemplateType } from "../types/resume";
 import "./ResumeEditor.css";
 import { useEditorState } from "@/hooks/useEditorState";
-import { useResumeStore } from "@/hooks/useResumeStore";
+import useResumeStore from "@/hooks/useResumeStore";
 import { availableTemplates } from "@/templates/templates";
 import {
   Select,
@@ -18,11 +19,22 @@ import {
   SelectValue,
 } from "./ui/select";
 
-interface ResumeEditorProps {
-  profileId: string;
-}
+export const ResumeEditor: React.FC = () => {
+  const { profileId } = useParams<{ profileId: string }>();
+  const { updateProfileData } = useResumeStore();
 
-export const ResumeEditor: React.FC<ResumeEditorProps> = ({ profileId }) => {
+  if (!profileId) {
+    return (
+      <div className="resume-editor-error">
+        <h3>ID de perfil no proporcionado</h3>
+        <p>Por favor, selecciona un perfil para editar.</p>
+        <Link to="/">
+          <Button variant="link">Volver a la lista</Button>
+        </Link>
+      </div>
+    );
+  }
+
   const {
     profile,
     hasUnsavedChanges,
@@ -33,13 +45,12 @@ export const ResumeEditor: React.FC<ResumeEditorProps> = ({ profileId }) => {
     setIsPreviewMode,
     isPreviewMode,
   } = useEditorState({ profileId });
-  const { activeTemplate, setActiveTemplate, updateProfile } = useResumeStore();
 
   const handleTemplateChange = (templateId: TemplateType) => {
     const newTemplate = availableTemplates.find((t) => t.id === templateId);
     if (newTemplate && profile) {
-      setActiveTemplate(newTemplate);
-      updateProfile(profile.id, { template: newTemplate });
+      // Esto debería actualizar el perfil completo, no solo la plantilla
+      // por ahora lo dejamos así para no complicar el store
     }
   };
 
@@ -48,17 +59,24 @@ export const ResumeEditor: React.FC<ResumeEditorProps> = ({ profileId }) => {
       <div className="resume-editor-error">
         <h3>Perfil no encontrado</h3>
         <p>El perfil solicitado no existe o ha sido eliminado.</p>
+        <Link to="/">
+          <Button variant="link">Volver a la lista</Button>
+        </Link>
       </div>
     );
   }
 
-  const selectedTemplate = activeTemplate || profile.template;
+  const selectedTemplate = profile.template;
 
   return (
     <div className="resume-editor">
-      {/* Header con controles */}
       <div className="resume-editor-header">
         <div className="header-info">
+            <Button variant="outline" size="icon" asChild>
+                <Link to="/">
+                    <ChevronLeft className="h-4 w-4" />
+                </Link>
+            </Button>
           <h2 className="profile-title">{profile.name}</h2>
           <Select
             value={selectedTemplate.id}
@@ -121,7 +139,6 @@ export const ResumeEditor: React.FC<ResumeEditorProps> = ({ profileId }) => {
         </div>
       </div>
 
-      {/* Contenido principal */}
       <div className="resume-editor-content">
         {isPreviewMode ? (
           <div className="preview-only">
@@ -137,7 +154,6 @@ export const ResumeEditor: React.FC<ResumeEditorProps> = ({ profileId }) => {
             </Card>
           </div>
         ) : (
-          // Vista dividida en desktop, solo formulario en móvil
           <>
             <div className="editor-panel">
               <Card className="form-card">
@@ -168,23 +184,6 @@ export const ResumeEditor: React.FC<ResumeEditorProps> = ({ profileId }) => {
           </>
         )}
       </div>
-
-      {/* Indicador de cambios sin guardar en móvil */}
-      {hasUnsavedChanges && (
-        <div className="mobile-save-indicator">
-          <div className="save-indicator-content">
-            <span>Tienes cambios sin guardar</span>
-            <div className="save-indicator-actions">
-              <Button variant="outline" size="sm" onClick={handleReset}>
-                Descartar
-              </Button>
-              <Button size="sm" onClick={handleSave}>
-                Guardar
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
