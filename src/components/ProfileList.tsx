@@ -17,12 +17,12 @@ const ProfileList = () => {
         <h1 className="text-3xl font-bold tracking-tight">Mis Perfiles de CV</h1>
         <p className="text-muted-foreground">Selecciona un perfil para ver, editar o exportar.</p>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
         {profiles.map((profile) => (
-          <Link to={`/profile/${profile.id}`} key={profile.id} className="block hover:no-underline">
-            <Card className="hover:shadow-lg transition-shadow duration-200 h-full flex flex-col">
+          <Link to={`/profile/${profile.id}`} key={profile.id} className="block hover:no-underline group">
+            <Card className="h-full flex flex-col border-2 border-slate-200/80 dark:border-slate-800 group-hover:border-blue-700 dark:group-hover:border-blue-600 group-hover:shadow-xl transition-all duration-300 transform group-hover:-translate-y-1">
               <CardHeader>
-                <CardTitle>{profile.name}</CardTitle>
+                <CardTitle className="text-lg font-semibold tracking-tight">{profile.name}</CardTitle>
                 <CardDescription>{profile.data.basics.label}</CardDescription>
               </CardHeader>
               <CardContent className="flex-grow">
