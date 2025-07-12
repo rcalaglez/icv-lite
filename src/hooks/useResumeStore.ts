@@ -10,6 +10,7 @@ interface ResumeStore {
   getProfileById: (id: string) => CVProfile | undefined;
   updateProfileData: (id: string, data: ResumeData) => void;
   createProfile: () => string; // Devuelve el ID del nuevo perfil
+  deleteProfile: (id: string) => void;
 }
 
 const useResumeStore = create<ResumeStore>()(
@@ -61,6 +62,12 @@ const useResumeStore = create<ResumeStore>()(
         }));
 
         return newId;
+      },
+
+      deleteProfile: (id: string) => {
+        set((state) => ({
+          profiles: state.profiles.filter((profile) => profile.id !== id),
+        }));
       },
     }),
     {

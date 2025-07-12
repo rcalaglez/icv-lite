@@ -1,11 +1,22 @@
 import React from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { ResumeForm } from "./ResumeForm";
 import { ResumeRenderer } from "./ResumeRenderer";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Eye, Edit, Save, RotateCcw, ChevronLeft } from "lucide-react";
+import { Trash2, Eye, Edit, Save, RotateCcw, ChevronLeft } from "lucide-react";
 import type { TemplateType } from "../types/resume";
 import "./ResumeEditor.css";
 import { useEditorState } from "@/hooks/useEditorState";
@@ -21,7 +32,9 @@ import {
 
 export const ResumeEditor: React.FC = () => {
   const { profileId } = useParams<{ profileId: string }>();
-  const { updateProfileData } = useResumeStore();
+  const updateProfileData = useResumeStore((state) => state.updateProfileData);
+  const deleteProfile = useResumeStore((state) => state.deleteProfile);
+  const navigate = useNavigate();
 
   if (!profileId) {
     return (
@@ -45,6 +58,13 @@ export const ResumeEditor: React.FC = () => {
     setIsPreviewMode,
     isPreviewMode,
   } = useEditorState({ profileId });
+
+  const handleDelete = () => {
+    if (profileId) {
+      deleteProfile(profileId);
+      navigate("/");
+    }
+  };
 
   const handleTemplateChange = (templateId: TemplateType) => {
     const newTemplate = availableTemplates.find((t) => t.id === templateId);
@@ -72,11 +92,11 @@ export const ResumeEditor: React.FC = () => {
     <div className="resume-editor">
       <div className="resume-editor-header">
         <div className="header-info">
-            <Button variant="outline" size="icon" asChild>
-                <Link to="/">
-                    <ChevronLeft className="h-4 w-4" />
-                </Link>
-            </Button>
+          <Button variant="outline" size="icon" asChild>
+            <Link to="/">
+              <ChevronLeft className="h-4 w-4" />
+            </Link>
+          </Button>
           <h2 className="profile-title">{profile.name}</h2>
           <Select
             value={selectedTemplate.id}
@@ -135,6 +155,34 @@ export const ResumeEditor: React.FC = () => {
               <Save className="h-4 w-4 mr-2" />
               Guardar
             </Button>
+
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="destructive" size="sm">
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Eliminar
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>
+                    ¿Estás absolutamente seguro?
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Esta acción no se puede deshacer. Se eliminará
+                    permanentemente tu perfil
+                    <span className="font-bold"> {profile.name}</span> y todos
+                    sus datos.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleDelete}>
+                    Continuar
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
         </div>
       </div>
