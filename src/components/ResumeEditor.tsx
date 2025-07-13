@@ -33,6 +33,7 @@ import {
 export const ResumeEditor: React.FC = () => {
   const { profileId } = useParams<{ profileId: string }>();
   const deleteProfile = useResumeStore((state) => state.deleteProfile);
+  const updateProfileTemplate = useResumeStore((state) => state.updateProfileTemplate);
   const navigate = useNavigate();
 
   if (!profileId) {
@@ -74,8 +75,7 @@ export const ResumeEditor: React.FC = () => {
   const handleTemplateChange = (templateId: TemplateType) => {
     const newTemplate = availableTemplates.find((t) => t.id === templateId);
     if (newTemplate && profile) {
-      // Esto debería actualizar el perfil completo, no solo la plantilla
-      // por ahora lo dejamos así para no complicar el store
+      updateProfileTemplate(profile.id, newTemplate);
     }
   };
 
