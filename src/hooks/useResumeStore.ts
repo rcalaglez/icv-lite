@@ -14,6 +14,7 @@ interface ResumeStore {
   updateProfileName: (id: string, name: string) => void;
   updateProfileTemplate: (id: string, template: Template) => void;
   duplicateProfile: (id: string) => string;
+  importProfile: (data: ResumeData, name?: string) => string;
 }
 
 const useResumeStore = create<ResumeStore>()(
@@ -106,6 +107,27 @@ const useResumeStore = create<ResumeStore>()(
 
         set((state) => ({
           profiles: [...state.profiles, duplicatedProfile],
+        }));
+
+        return newId;
+      },
+
+      importProfile: (data: ResumeData, name?: string) => {
+        const newId = crypto.randomUUID();
+        const now = new Date().toISOString();
+        const defaultTemplate = availableTemplates[0];
+
+        const importedProfile: CVProfile = {
+          id: newId,
+          name: name || data.basics.name || "Perfil Importado",
+          template: defaultTemplate,
+          createdAt: now,
+          updatedAt: now,
+          data: data,
+        };
+
+        set((state) => ({
+          profiles: [...state.profiles, importedProfile],
         }));
 
         return newId;
