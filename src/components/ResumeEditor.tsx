@@ -16,7 +16,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Trash2, Eye, Edit, Save, RotateCcw, ChevronLeft, Pencil } from "lucide-react";
+import { Trash2, Eye, Edit, Save, RotateCcw, ChevronLeft, Pencil, Copy } from "lucide-react";
 import type { TemplateType } from "../types/resume";
 import "./ResumeEditor.css";
 import { useEditorState } from "@/hooks/useEditorState";
@@ -34,6 +34,7 @@ export const ResumeEditor: React.FC = () => {
   const { profileId } = useParams<{ profileId: string }>();
   const deleteProfile = useResumeStore((state) => state.deleteProfile);
   const updateProfileTemplate = useResumeStore((state) => state.updateProfileTemplate);
+  const duplicateProfile = useResumeStore((state) => state.duplicateProfile);
   const navigate = useNavigate();
 
   if (!profileId) {
@@ -68,7 +69,14 @@ export const ResumeEditor: React.FC = () => {
   const handleDelete = () => {
     if (profileId) {
       deleteProfile(profileId);
-      navigate("/");
+      navigate('/');
+    }
+  };
+
+  const handleDuplicate = () => {
+    if (profileId) {
+      const newProfileId = duplicateProfile(profileId);
+      navigate(`/profile/${newProfileId}`);
     }
   };
 
@@ -205,6 +213,11 @@ export const ResumeEditor: React.FC = () => {
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
+
+            <Button variant="outline" size="sm" onClick={handleDuplicate}>
+              <Copy className="h-4 w-4 mr-2" />
+              Duplicar
+            </Button>
           </div>
         </div>
       </div>

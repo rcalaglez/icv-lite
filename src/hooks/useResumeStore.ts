@@ -13,6 +13,7 @@ interface ResumeStore {
   deleteProfile: (id: string) => void;
   updateProfileName: (id: string, name: string) => void;
   updateProfileTemplate: (id: string, template: Template) => void;
+  duplicateProfile: (id: string) => string;
 }
 
 const useResumeStore = create<ResumeStore>()(
@@ -86,6 +87,28 @@ const useResumeStore = create<ResumeStore>()(
             profile.id === id ? { ...profile, template, updatedAt: new Date().toISOString() } : profile
           ),
         }));
+      },
+
+      duplicateProfile: (id: string) => {
+        const profileToDuplicate = get().getProfileById(id);
+        if (!profileToDuplicate) return "";
+
+        const newId = crypto.randomUUID();
+        const now = new Date().toISOString();
+
+        const duplicatedProfile: CVProfile = {
+          ...profileToDuplicate,
+          id: newId,
+          name: `Copia de ${profileToDuplicate.name}`,
+          createdAt: now,
+          updatedAt: now,
+        };
+
+        set((state) => ({
+          profiles: [...state.profiles, duplicatedProfile],
+        }));
+
+        return newId;
       },
     }),
     {
