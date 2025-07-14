@@ -16,7 +16,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Trash2, Eye, Edit, Save, RotateCcw, ChevronLeft, Pencil, Copy } from "lucide-react";
+import { Trash2, Eye, Edit, Save, RotateCcw, ChevronLeft, Pencil, Copy, Download } from "lucide-react";
 import type { TemplateType } from "../types/resume";
 import "./ResumeEditor.css";
 import { useEditorState } from "@/hooks/useEditorState";
@@ -77,6 +77,22 @@ export const ResumeEditor: React.FC = () => {
     if (profileId) {
       const newProfileId = duplicateProfile(profileId);
       navigate(`/profile/${newProfileId}`);
+    }
+  };
+
+  const handleExportJson = () => {
+    if (currentData && profile) {
+      const filename = `${profile.name.replace(/\s+/g, '-').toLowerCase()}-resume.json`;
+      const jsonStr = JSON.stringify(currentData, null, 2);
+      const blob = new Blob([jsonStr], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
     }
   };
 
@@ -217,6 +233,11 @@ export const ResumeEditor: React.FC = () => {
             <Button variant="outline" size="sm" onClick={handleDuplicate}>
               <Copy className="h-4 w-4 mr-2" />
               Duplicar
+            </Button>
+
+            <Button variant="outline" size="sm" onClick={handleExportJson}>
+              <Download className="h-4 w-4 mr-2" />
+              Exportar JSON
             </Button>
           </div>
         </div>
