@@ -54,7 +54,7 @@ const ProfileList = () => {
       <header className="flex justify-between items-center mb-12">
         <h1 className="text-4xl font-bold">Mis Perfiles</h1>
         <div className="flex gap-4">
-          <Button onClick={() => fileInputRef.current?.click()} size="lg">
+          <Button onClick={() => fileInputRef.current?.click()} size={{ base: "default", md: "lg" }}>
             <Upload className="h-6 w-6 mr-2" />
             Importar CV
           </Button>
@@ -65,7 +65,7 @@ const ProfileList = () => {
             className="hidden"
             accept=".json"
           />
-          <Button onClick={handleCreateProfile} size="lg" variant="outline">
+          <Button onClick={handleCreateProfile} size={{ base: "default", md: "lg" }} variant="outline">
             <Plus className="h-6 w-6 mr-2" />
             Crear Nuevo Perfil
           </Button>

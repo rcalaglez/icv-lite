@@ -143,8 +143,8 @@ export const ResumeEditor: React.FC = () => {
   const selectedTemplate = profile.template;
 
   return (
-    <div className="flex flex-col h-screen bg-secondary">
-      <header className="flex items-center justify-between p-4 bg-background border-b">
+    <div className="flex flex-col h-screen bg-secondary print:h-auto print:overflow-visible print:bg-white">
+      <header className="flex items-center justify-between p-4 bg-background border-b print:hidden">
         <div className="flex items-center gap-4">
           <Button variant="outline" size="icon" asChild>
             <Link to="/">
@@ -282,36 +282,28 @@ export const ResumeEditor: React.FC = () => {
         </div>
       </header>
 
-      <main className="flex-grow p-8 overflow-auto">
-        {isPreviewMode ? (
-          <div className="flex justify-center">
-            <Card className="w-full max-w-4xl p-8">
+      <main className="flex-grow p-8 overflow-auto print:p-0 print:overflow-visible">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 print:grid-cols-1 print:gap-0">
+          {/* Form Panel - hidden on print */}
+          <Card className="p-6 print:hidden">
+            <ResumeForm data={currentData} onUpdate={handleDataUpdate} />
+          </Card>
+
+          {/* Preview Panel - always visible and full width on print */}
+          <div className="relative print:static">
+            <Card className="p-8 sticky top-0 print:shadow-none print:border-0 print:p-0 print:static">
               <ResumeRenderer
                 data={currentData}
                 template={selectedTemplate.id as TemplateType}
               />
+              {hasUnsavedChanges && (
+                <div className="absolute top-4 right-4 bg-yellow-200 text-yellow-800 px-3 py-1 rounded-full text-sm font-medium print:hidden">
+                  Cambios sin guardar
+                </div>
+              )}
             </Card>
           </div>
-        ) : (
-          <div className="grid grid-cols-2 gap-8">
-            <Card className="p-6">
-              <ResumeForm data={currentData} onUpdate={handleDataUpdate} />
-            </Card>
-            <div className="relative">
-              <Card className="p-8 sticky top-0">
-                <ResumeRenderer
-                  data={currentData}
-                  template={selectedTemplate.id as TemplateType}
-                />
-                {hasUnsavedChanges && (
-                  <div className="absolute top-4 right-4 bg-yellow-200 text-yellow-800 px-3 py-1 rounded-full text-sm font-medium">
-                    Cambios sin guardar
-                  </div>
-                )}
-              </Card>
-            </div>
-          </div>
-        )}
+        </div>
       </main>
     </div>
   );
