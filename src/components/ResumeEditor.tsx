@@ -59,7 +59,9 @@ export const ResumeEditor: React.FC = () => {
   if (!profileId) {
     return (
       <div className="flex flex-col items-center justify-center h-screen">
-        <h3 className="text-2xl font-semibold mb-4">ID de perfil no proporcionado</h3>
+        <h3 className="text-2xl font-semibold mb-4">
+          ID de perfil no proporcionado
+        </h3>
         <p className="text-muted-foreground mb-8">
           Por favor, selecciona un perfil para editar.
         </p>
@@ -144,8 +146,8 @@ export const ResumeEditor: React.FC = () => {
 
   return (
     <div className="flex flex-col h-screen bg-secondary print:h-auto print:overflow-visible print:bg-white">
-      <header className="flex items-center justify-between p-4 bg-background border-b print:hidden">
-        <div className="flex items-center gap-4">
+      <header className="flex flex-col sm:flex-row items-center justify-between p-4 bg-background border-b print:hidden">
+        <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
           <Button variant="outline" size="icon" asChild>
             <Link to="/">
               <ChevronLeft className="h-5 w-5" />
@@ -178,12 +180,16 @@ export const ResumeEditor: React.FC = () => {
               handleTemplateChange(value as TemplateType)
             }
           >
-            <SelectTrigger className="w-[320px] h-14 text-lg font-bold border-4 border-solid">
+            <SelectTrigger className="w-full sm:w-[320px] h-14 text-lg font-bold border-4 border-solid">
               <SelectValue placeholder="Seleccionar plantilla" />
             </SelectTrigger>
             <SelectContent>
               {availableTemplates.map((template) => (
-                <SelectItem key={template.id} value={template.id} className="text-lg">
+                <SelectItem
+                  key={template.id}
+                  value={template.id}
+                  className="text-lg"
+                >
                   {template.name}
                 </SelectItem>
               ))}
@@ -191,12 +197,13 @@ export const ResumeEditor: React.FC = () => {
           </Select>
         </div>
 
-        <div className="flex items-center gap-4">
-          <div className="flex items-center rounded-md bg-secondary p-1">
+        <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto mt-4 sm:mt-0">
+          <div className="flex items-center rounded-md bg-secondary p-1 w-full sm:w-auto">
             <Button
               variant={!isPreviewMode ? "primary" : "ghost"}
               size="sm"
               onClick={() => setIsPreviewMode(false)}
+              className="flex-1"
             >
               <Edit className="h-5 w-5 mr-2" />
               Editar
@@ -205,17 +212,23 @@ export const ResumeEditor: React.FC = () => {
               variant={isPreviewMode ? "primary" : "ghost"}
               size="sm"
               onClick={() => setIsPreviewMode(true)}
+              className="flex-1"
             >
               <Eye className="h-5 w-5 mr-2" />
               Vista previa
             </Button>
           </div>
 
-          <Separator orientation="vertical" className="h-8" />
+          <Separator orientation="vertical" className="h-8 hidden sm:block" />
 
-          <div className="flex items-center gap-2">
+          <div className="flex gap-2 w-full sm:w-auto">
             {hasUnsavedChanges && (
-              <Button variant="outline" size="sm" onClick={handleReset}>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleReset}
+                className="flex-1"
+              >
                 <RotateCcw className="h-5 w-5 mr-2" />
                 Descartar
               </Button>
@@ -225,6 +238,7 @@ export const ResumeEditor: React.FC = () => {
               size="sm"
               onClick={handleSave}
               disabled={!hasUnsavedChanges}
+              className="flex-1"
             >
               <Save className="h-5 w-5 mr-2" />
               Guardar
@@ -282,7 +296,7 @@ export const ResumeEditor: React.FC = () => {
         </div>
       </header>
 
-      <main className="flex-grow p-8 overflow-auto print:p-0 print:overflow-visible">
+      <main className="flex-grow p-4 sm:p-8 overflow-auto print:p-0 print:overflow-visible">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 print:grid-cols-1 print:gap-0">
           {/* Form Panel - hidden on print */}
           <Card className="p-6 print:hidden">

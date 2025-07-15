@@ -51,10 +51,10 @@ const ProfileList = () => {
       transition={{ duration: 0.1 }}
       className="container mx-auto p-8"
     >
-      <header className="flex justify-between items-center mb-12">
+      <header className="flex flex-col sm:flex-row justify-between items-center mb-12 gap-4">
         <h1 className="text-4xl font-bold">Mis Perfiles</h1>
-        <div className="flex gap-4">
-          <Button onClick={() => fileInputRef.current?.click()} size={{ base: "default", md: "lg" }}>
+        <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+          <Button onClick={() => fileInputRef.current?.click()} size="lg" className="w-full sm:w-auto">
             <Upload className="h-6 w-6 mr-2" />
             Importar CV
           </Button>
@@ -65,7 +65,7 @@ const ProfileList = () => {
             className="hidden"
             accept=".json"
           />
-          <Button onClick={handleCreateProfile} size={{ base: "default", md: "lg" }} variant="outline">
+          <Button onClick={handleCreateProfile} size="lg" variant="outline" className="w-full sm:w-auto">
             <Plus className="h-6 w-6 mr-2" />
             Crear Nuevo Perfil
           </Button>

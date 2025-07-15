@@ -9,7 +9,7 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="flex h-screen bg-secondary">
       <aside
-        className={`transition-all duration-300 bg-background border-r ${
+        className={`fixed inset-y-0 left-0 z-50 flex flex-col transition-all duration-300 bg-background border-r lg:static lg:inset-auto lg:w-auto ${
           isCollapsed ? "w-20" : "w-64"
         }`}
       >
@@ -21,6 +21,7 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
             variant="ghost"
             size="icon"
             onClick={() => setIsCollapsed(!isCollapsed)}
+            className="ml-auto lg:ml-0"
           >
             {isCollapsed ? <ChevronsRight /> : <ChevronsLeft />}
           </Button>
@@ -36,7 +37,11 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
           </Link>
         </nav>
       </aside>
-      <main className="flex-grow overflow-auto">{children}</main>
+      <main className={`flex-grow overflow-auto transition-all duration-300 ${
+        isCollapsed ? "lg:ml-20" : "lg:ml-64"
+      }`}>{
+        children
+      }</main>
     </div>
   );
 };
