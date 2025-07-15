@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import useResumeStore from "@/hooks/useResumeStore";
 import { Button } from "@/components/ui/button";
 import { FileImporterService } from "@/lib/importers/fileImporterService";
-import { Upload } from "lucide-react";
+import { Upload, Plus } from "lucide-react";
 import {
   Card,
   CardHeader,
@@ -11,6 +11,7 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import React, { useRef } from "react";
+import { motion } from "framer-motion";
 
 const ProfileList = () => {
   const profiles = useResumeStore((state) => state.profiles);
@@ -37,64 +38,75 @@ const ProfileList = () => {
       console.error("Error al importar el archivo:", error);
       alert(`Error al importar el archivo: ${(error as Error).message}`);
     }
-    // Limpiar el input para permitir la misma selección de archivo de nuevo
     event.target.value = "";
   };
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   return (
-    <div className="container mx-auto p-4 md:p-8">
-      <div className="mb-8 bg-slate-900 text-white -mx-4 md:-mx-8 -mt-4 md:-mt-8 p-4 shadow-lg">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <h1 className="text-5xl font-extrabold tracking-tight">
-            <span className="text-blue-500">i</span>CV
-          </h1>
-          <Button onClick={handleCreateProfile} size="lg">
-            Crear Nuevo Perfil
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.1 }}
+      className="container mx-auto p-8"
+    >
+      <header className="flex justify-between items-center mb-12">
+        <h1 className="text-4xl font-bold">Mis Perfiles</h1>
+        <div className="flex gap-4">
+          <Button onClick={() => fileInputRef.current?.click()} size="lg">
+            <Upload className="h-6 w-6 mr-2" />
+            Importar CV
           </Button>
           <input
             type="file"
             ref={fileInputRef}
             onChange={handleImportFile}
             className="hidden"
-            accept=".json" // Solo JSON por ahora
+            accept=".json"
           />
-          <Button
-            onClick={() => fileInputRef.current?.click()}
-            size="lg"
-            variant="outline"
-          >
-            <Upload className="h-5 w-5 mr-2" />
-            Importar CV
+          <Button onClick={handleCreateProfile} size="lg" variant="outline">
+            <Plus className="h-6 w-6 mr-2" />
+            Crear Nuevo Perfil
           </Button>
         </div>
-      </div>
+      </header>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
-        {profiles.map((profile) => (
-          <Link
-            to={`/profile/${profile.id}`}
+      <motion.div
+        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.1, delay: 0.1 }}
+      >
+        {profiles.map((profile, index) => (
+          <motion.div
             key={profile.id}
-            className="block hover:no-underline group"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.1, delay: index * 0.05 }}
           >
-            <Card className="h-full flex flex-col border-2 border-slate-200/80 dark:border-slate-800 group-hover:border-blue-700 dark:group-hover:border-blue-600 group-hover:shadow-xl transition-all duration-300 transform group-hover:-translate-y-1">
-              <CardHeader>
-                <CardTitle className="text-lg font-semibold tracking-tight">
-                  {profile.name}
-                </CardTitle>
-                <CardDescription>{profile.data.basics.label}</CardDescription>
-              </CardHeader>
-              <CardContent className="flex-grow">
-                <p className="text-sm text-muted-foreground line-clamp-3">
-                  {profile.data.basics.summary}
-                </p>
-              </CardContent>
-            </Card>
-          </Link>
+            <Link
+              to={`/profile/${profile.id}`}
+              className="block hover:no-underline group"
+            >
+              <Card className="h-full flex flex-col transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl hover:border-primary">
+                <CardHeader>
+                  <CardTitle className="text-xl font-semibold tracking-tight group-hover:text-2xl transition-all duration-300">
+                    {profile.name}
+                  </CardTitle>
+                  <CardDescription>{profile.data.basics.label}</CardDescription>
+                </CardHeader>
+                <CardContent className="flex-grow">
+                  <p className="text-sm text-muted-foreground line-clamp-3">
+                    {profile.data.basics.summary}
+                  </p>
+                </CardContent>
+              </Card>
+            </Link>
+          </motion.div>
         ))}
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };
 

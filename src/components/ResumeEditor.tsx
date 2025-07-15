@@ -16,9 +16,19 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Trash2, Eye, Edit, Save, RotateCcw, ChevronLeft, Pencil, Copy, Download } from "lucide-react";
+import {
+  Trash2,
+  Eye,
+  Edit,
+  Save,
+  RotateCcw,
+  ChevronLeft,
+  Pencil,
+  Copy,
+  Download,
+  MoreHorizontal,
+} from "lucide-react";
 import type { TemplateType } from "../types/resume";
-import "./ResumeEditor.css";
 import { useEditorState } from "@/hooks/useEditorState";
 import useResumeStore from "@/hooks/useResumeStore";
 import { availableTemplates } from "@/templates/templates";
@@ -29,19 +39,30 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
 
 export const ResumeEditor: React.FC = () => {
   const { profileId } = useParams<{ profileId: string }>();
   const deleteProfile = useResumeStore((state) => state.deleteProfile);
-  const updateProfileTemplate = useResumeStore((state) => state.updateProfileTemplate);
+  const updateProfileTemplate = useResumeStore(
+    (state) => state.updateProfileTemplate
+  );
   const duplicateProfile = useResumeStore((state) => state.duplicateProfile);
   const navigate = useNavigate();
 
   if (!profileId) {
     return (
-      <div className="resume-editor-error">
-        <h3>ID de perfil no proporcionado</h3>
-        <p>Por favor, selecciona un perfil para editar.</p>
+      <div className="flex flex-col items-center justify-center h-screen">
+        <h3 className="text-2xl font-semibold mb-4">ID de perfil no proporcionado</h3>
+        <p className="text-muted-foreground mb-8">
+          Por favor, selecciona un perfil para editar.
+        </p>
         <Link to="/">
           <Button variant="link">Volver a la lista</Button>
         </Link>
@@ -69,7 +90,7 @@ export const ResumeEditor: React.FC = () => {
   const handleDelete = () => {
     if (profileId) {
       deleteProfile(profileId);
-      navigate('/');
+      navigate("/");
     }
   };
 
@@ -82,11 +103,13 @@ export const ResumeEditor: React.FC = () => {
 
   const handleExportJson = () => {
     if (currentData && profile) {
-      const filename = `${profile.name.replace(/\s+/g, '-').toLowerCase()}-resume.json`;
+      const filename = `${profile.name
+        .replace(/\s+/g, "-")
+        .toLowerCase()}-resume.json`;
       const jsonStr = JSON.stringify(currentData, null, 2);
-      const blob = new Blob([jsonStr], { type: 'application/json' });
+      const blob = new Blob([jsonStr], { type: "application/json" });
       const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
+      const a = document.createElement("a");
       a.href = url;
       a.download = filename;
       document.body.appendChild(a);
@@ -105,9 +128,11 @@ export const ResumeEditor: React.FC = () => {
 
   if (!profile) {
     return (
-      <div className="resume-editor-error">
-        <h3>Perfil no encontrado</h3>
-        <p>El perfil solicitado no existe o ha sido eliminado.</p>
+      <div className="flex flex-col items-center justify-center h-screen">
+        <h3 className="text-2xl font-semibold mb-4">Perfil no encontrado</h3>
+        <p className="text-muted-foreground mb-8">
+          El perfil solicitado no existe o ha sido eliminado.
+        </p>
         <Link to="/">
           <Button variant="link">Volver a la lista</Button>
         </Link>
@@ -118,15 +143,18 @@ export const ResumeEditor: React.FC = () => {
   const selectedTemplate = profile.template;
 
   return (
-    <div className="resume-editor">
-      <div className="resume-editor-header">
-        <div className="header-info">
+    <div className="flex flex-col h-screen bg-secondary">
+      <header className="flex items-center justify-between p-4 bg-background border-b">
+        <div className="flex items-center gap-4">
           <Button variant="outline" size="icon" asChild>
             <Link to="/">
-              <ChevronLeft className="h-4 w-4" />
+              <ChevronLeft className="h-5 w-5" />
             </Link>
           </Button>
-          <h2 className="profile-title group flex items-center gap-2 cursor-pointer" onClick={() => setIsEditingName(true)}>
+          <div
+            className="group flex items-center gap-2 cursor-pointer"
+            onClick={() => setIsEditingName(true)}
+          >
             {isEditingName ? (
               <input
                 type="text"
@@ -135,27 +163,27 @@ export const ResumeEditor: React.FC = () => {
                 onBlur={handleNameSave}
                 onKeyDown={handleNameKeyDown}
                 autoFocus
-                className="bg-transparent border-b border-blue-500 focus:outline-none focus:border-blue-700 text-xl font-semibold tracking-tight"
+                className="bg-transparent border-b border-primary focus:outline-none text-2xl font-bold"
               />
             ) : (
               <>
-                {profile.name}
-                <Pencil className="h-4 w-4 text-slate-500 opacity-0 group-hover:opacity-100 transition-opacity" />
+                <h2 className="text-2xl font-bold">{profile.name}</h2>
+                <Pencil className="h-6 w-6 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
               </>
             )}
-          </h2>
+          </div>
           <Select
             value={selectedTemplate.id}
             onValueChange={(value) =>
               handleTemplateChange(value as TemplateType)
             }
           >
-            <SelectTrigger className="w-[280px]">
+            <SelectTrigger className="w-[320px] h-14 text-lg font-bold border-4 border-solid">
               <SelectValue placeholder="Seleccionar plantilla" />
             </SelectTrigger>
             <SelectContent>
               {availableTemplates.map((template) => (
-                <SelectItem key={template.id} value={template.id}>
+                <SelectItem key={template.id} value={template.id} className="text-lg">
                   {template.name}
                 </SelectItem>
               ))}
@@ -163,32 +191,32 @@ export const ResumeEditor: React.FC = () => {
           </Select>
         </div>
 
-        <div className="header-controls">
-          <div className="view-toggle">
+        <div className="flex items-center gap-4">
+          <div className="flex items-center rounded-md bg-secondary p-1">
             <Button
-              variant={!isPreviewMode ? "default" : "outline"}
+              variant={!isPreviewMode ? "primary" : "ghost"}
               size="sm"
               onClick={() => setIsPreviewMode(false)}
             >
-              <Edit className="h-4 w-4 mr-2" />
+              <Edit className="h-5 w-5 mr-2" />
               Editar
             </Button>
             <Button
-              variant={isPreviewMode ? "default" : "outline"}
+              variant={isPreviewMode ? "primary" : "ghost"}
               size="sm"
               onClick={() => setIsPreviewMode(true)}
             >
-              <Eye className="h-4 w-4 mr-2" />
+              <Eye className="h-5 w-5 mr-2" />
               Vista previa
             </Button>
           </div>
 
-          <Separator orientation="vertical" className="h-6" />
+          <Separator orientation="vertical" className="h-8" />
 
-          <div className="action-buttons">
+          <div className="flex items-center gap-2">
             {hasUnsavedChanges && (
               <Button variant="outline" size="sm" onClick={handleReset}>
-                <RotateCcw className="h-4 w-4 mr-2" />
+                <RotateCcw className="h-5 w-5 mr-2" />
                 Descartar
               </Button>
             )}
@@ -198,96 +226,93 @@ export const ResumeEditor: React.FC = () => {
               onClick={handleSave}
               disabled={!hasUnsavedChanges}
             >
-              <Save className="h-4 w-4 mr-2" />
+              <Save className="h-5 w-5 mr-2" />
               Guardar
             </Button>
 
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button variant="destructive" size="sm">
-                  <Trash2 className="h-4 w-4 mr-2" />
-                  Eliminar
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="icon">
+                  <MoreHorizontal className="h-5 w-5" />
                 </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>
-                    ¿Estás absolutamente seguro?
-                  </AlertDialogTitle>
-                  <AlertDialogDescription>
-                    Esta acción no se puede deshacer. Se eliminará
-                    permanentemente tu perfil
-                    <span className="font-bold"> {profile.name}</span> y todos
-                    sus datos.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                  <AlertDialogAction onClick={handleDelete}>
-                    Continuar
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-
-            <Button variant="outline" size="sm" onClick={handleDuplicate}>
-              <Copy className="h-4 w-4 mr-2" />
-              Duplicar
-            </Button>
-
-            <Button variant="outline" size="sm" onClick={handleExportJson}>
-              <Download className="h-4 w-4 mr-2" />
-              Exportar JSON
-            </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={handleDuplicate}>
+                  <Copy className="h-5 w-5 mr-2" />
+                  Duplicar
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleExportJson}>
+                  <Download className="h-5 w-5 mr-2" />
+                  Exportar JSON
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <DropdownMenuItem
+                      onSelect={(e) => e.preventDefault()}
+                      className="text-destructive focus:text-destructive"
+                    >
+                      <Trash2 className="h-5 w-5 mr-2" />
+                      Eliminar
+                    </DropdownMenuItem>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>
+                        ¿Estás absolutamente seguro?
+                      </AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Esta acción no se puede deshacer. Se eliminará
+                        permanentemente tu perfil
+                        <span className="font-bold"> {profile.name}</span> y
+                        todos sus datos.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                      <AlertDialogAction onClick={handleDelete}>
+                        Continuar
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
-      </div>
+      </header>
 
-      <div className="resume-editor-content">
+      <main className="flex-grow p-8 overflow-auto">
         {isPreviewMode ? (
-          <div className="preview-only">
-            <Card className="preview-card">
-              <div className="preview-content">
-                <div className="cv-wrapper">
-                  <ResumeRenderer
-                    data={currentData}
-                    template={selectedTemplate.id as TemplateType}
-                  />
-                </div>
-              </div>
+          <div className="flex justify-center">
+            <Card className="w-full max-w-4xl p-8">
+              <ResumeRenderer
+                data={currentData}
+                template={selectedTemplate.id as TemplateType}
+              />
             </Card>
           </div>
         ) : (
-          <>
-            <div className="editor-panel">
-              <Card className="form-card">
-                <ResumeForm data={currentData} onUpdate={handleDataUpdate} />
-              </Card>
-            </div>
-
-            <div className="preview-panel">
-              <Card className="preview-card">
-                <div className="preview-header">
-                  <h3>Vista previa</h3>
-                  {hasUnsavedChanges && (
-                    <span className="unsaved-indicator">
-                      Cambios sin guardar
-                    </span>
-                  )}
-                </div>
-                <div className="preview-content">
-                  <div className="cv-wrapper">
-                    <ResumeRenderer
-                      data={currentData}
-                      template={selectedTemplate.id as TemplateType}
-                    />
+          <div className="grid grid-cols-2 gap-8">
+            <Card className="p-6">
+              <ResumeForm data={currentData} onUpdate={handleDataUpdate} />
+            </Card>
+            <div className="relative">
+              <Card className="p-8 sticky top-0">
+                <ResumeRenderer
+                  data={currentData}
+                  template={selectedTemplate.id as TemplateType}
+                />
+                {hasUnsavedChanges && (
+                  <div className="absolute top-4 right-4 bg-yellow-200 text-yellow-800 px-3 py-1 rounded-full text-sm font-medium">
+                    Cambios sin guardar
                   </div>
-                </div>
+                )}
               </Card>
             </div>
-          </>
+          </div>
         )}
-      </div>
+      </main>
     </div>
   );
 };
