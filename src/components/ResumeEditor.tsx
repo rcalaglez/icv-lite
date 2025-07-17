@@ -15,7 +15,6 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import {
   Trash2,
   Eye,
@@ -27,6 +26,7 @@ import {
   Copy,
   Download,
   MoreHorizontal,
+  X,
 } from "lucide-react";
 import type { TemplateType } from "../types/resume";
 import { useEditorState } from "@/hooks/useEditorState";
@@ -46,6 +46,8 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
+import { motion, AnimatePresence } from "framer-motion";
 
 export const ResumeEditor: React.FC = () => {
   const { profileId } = useParams<{ profileId: string }>();
@@ -58,7 +60,7 @@ export const ResumeEditor: React.FC = () => {
 
   if (!profileId) {
     return (
-      <div className="flex flex-col items-center justify-center h-screen">
+      <div className="flex flex-col items-center justify-center h-screen p-4 text-center">
         <h3 className="text-2xl font-semibold mb-4">
           ID de perfil no proporcionado
         </h3>
@@ -79,8 +81,8 @@ export const ResumeEditor: React.FC = () => {
     handleSave,
     handleDataUpdate,
     handleReset,
-    setIsPreviewMode,
     isPreviewMode,
+    setIsPreviewMode,
     isEditingName,
     editedName,
     setIsEditingName,
@@ -130,7 +132,7 @@ export const ResumeEditor: React.FC = () => {
 
   if (!profile) {
     return (
-      <div className="flex flex-col items-center justify-center h-screen">
+      <div className="flex flex-col items-center justify-center h-screen p-4 text-center">
         <h3 className="text-2xl font-semibold mb-4">Perfil no encontrado</h3>
         <p className="text-muted-foreground mb-8">
           El perfil solicitado no existe o ha sido eliminado.
@@ -144,181 +146,295 @@ export const ResumeEditor: React.FC = () => {
 
   const selectedTemplate = profile.template;
 
-  return (
-    <div className="flex flex-col h-screen bg-secondary print:h-auto print:overflow-visible print:bg-white">
-      <header className="flex flex-col sm:flex-row items-center justify-between p-4 bg-background border-b print:hidden">
-        <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
-          <Button variant="outline" size="icon" asChild>
+  const renderHeader = () => (
+    <header className="hidden lg:flex flex-col sm:flex-row items-center justify-between p-4 bg-background border-b print:hidden">
+      <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
+        <Button variant="outline" size="icon" asChild>
+          <Link to="/">
+            <ChevronLeft className="h-5 w-5" />
+          </Link>
+        </Button>
+        <div
+          className="group flex items-center gap-2 cursor-pointer"
+          onClick={() => setIsEditingName(true)}
+        >
+          {isEditingName ? (
+            <input
+              type="text"
+              value={editedName}
+              onChange={handleNameChange}
+              onBlur={handleNameSave}
+              onKeyDown={handleNameKeyDown}
+              autoFocus
+              className="bg-transparent border-b border-primary focus:outline-none text-2xl font-bold"
+            />
+          ) : (
+            <>
+              <h2 className="text-2xl font-bold">{profile.name}</h2>
+              <Pencil className="h-5 w-5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+            </>
+          )}
+        </div>
+        <Select
+          value={selectedTemplate.id}
+          onValueChange={(value) => handleTemplateChange(value as TemplateType)}
+        >
+          <SelectTrigger className="w-full sm:max-w-[320px] h-12 text-lg">
+            <SelectValue placeholder="Seleccionar plantilla" />
+          </SelectTrigger>
+          <SelectContent>
+            {availableTemplates.map((template) => (
+              <SelectItem
+                key={template.id}
+                value={template.id}
+                className="text-lg"
+              >
+                {template.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="flex items-center gap-4">
+        {hasUnsavedChanges && (
+          <Button variant="ghost" onClick={handleReset}>
+            <RotateCcw className="h-5 w-5 mr-2" />
+            Descartar
+          </Button>
+        )}
+        <Button
+          onClick={handleSave}
+          disabled={!hasUnsavedChanges}
+          className="min-w-[120px]"
+        >
+          <Save className="h-5 w-5 mr-2" />
+          {hasUnsavedChanges ? "Guardar" : "Guardado"}
+        </Button>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" size="icon">
+              <MoreHorizontal className="h-5 w-5" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={handleDuplicate}>
+              <Copy className="h-5 w-5 mr-2" />
+              Duplicar
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={handleExportJson}>
+              <Download className="h-5 w-5 mr-2" />
+              Exportar JSON
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <DropdownMenuItem
+                  onSelect={(e) => e.preventDefault()}
+                  className="text-destructive focus:text-destructive"
+                >
+                  <Trash2 className="h-5 w-5 mr-2" />
+                  Eliminar
+                </DropdownMenuItem>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>
+                    ¿Estás absolutamente seguro?
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Esta acción no se puede deshacer. Se eliminará
+                    permanentemente tu perfil
+                    <span className="font-bold"> {profile.name}</span> y todos
+                    sus datos.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleDelete}>
+                    Continuar
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+    </header>
+  );
+
+  const renderMobileHeader = () => (
+    <header className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-background border-b print:hidden">
+      <div className="flex items-center justify-between p-2">
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" size="icon" asChild>
             <Link to="/">
-              <ChevronLeft className="h-5 w-5" />
+              <ChevronLeft className="h-6 w-6" />
             </Link>
           </Button>
-          <div
-            className="group flex items-center gap-2 cursor-pointer"
-            onClick={() => setIsEditingName(true)}
-          >
-            {isEditingName ? (
-              <input
-                type="text"
-                value={editedName}
-                onChange={handleNameChange}
-                onBlur={handleNameSave}
-                onKeyDown={handleNameKeyDown}
-                autoFocus
-                className="bg-transparent border-b border-primary focus:outline-none text-2xl font-bold"
-              />
-            ) : (
-              <>
-                <h2 className="font-bold">{profile.name}</h2>
-                <Pencil className="h-6 w-6 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
-              </>
-            )}
-          </div>
-          <Select
-            value={selectedTemplate.id}
-            onValueChange={(value) =>
-              handleTemplateChange(value as TemplateType)
-            }
-          >
-            <SelectTrigger className="w-full sm:max-w-[320px] h-14 text-lg font-bold border-4 border-solid">
-              <SelectValue placeholder="Seleccionar plantilla" />
-            </SelectTrigger>
-            <SelectContent>
-              {availableTemplates.map((template) => (
-                <SelectItem
-                  key={template.id}
-                  value={template.id}
-                  className="text-lg"
+          {isEditingName ? (
+            <input
+              type="text"
+              value={editedName}
+              onChange={handleNameChange}
+              onBlur={handleNameSave}
+              onKeyDown={handleNameKeyDown}
+              autoFocus
+              className="bg-transparent border-b border-primary focus:outline-none text-lg font-bold"
+            />
+          ) : (
+            <h2
+              className="text-lg font-bold truncate"
+              onClick={() => setIsEditingName(true)}
+            >
+              {profile.name}
+            </h2>
+          )}
+        </div>
+      </div>
+      <div className="flex items-center justify-between px-2 pb-2 gap-2">
+        <Select
+          value={selectedTemplate.id}
+          onValueChange={(value) => handleTemplateChange(value as TemplateType)}
+        >
+          <SelectTrigger className="flex-grow text-md">
+            <SelectValue placeholder="Seleccionar plantilla" />
+          </SelectTrigger>
+          <SelectContent>
+            {availableTemplates.map((template) => (
+              <SelectItem key={template.id} value={template.id}>
+                {template.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" size="icon">
+              <MoreHorizontal className="h-5 w-5" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={handleDuplicate}>
+              <Copy className="h-4 w-4 mr-2" />
+              Duplicar
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={handleExportJson}>
+              <Download className="h-4 w-4 mr-2" />
+              Exportar JSON
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <DropdownMenuItem
+                  onSelect={(e) => e.preventDefault()}
+                  className="text-destructive focus:text-destructive"
                 >
-                  {template.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto mt-4 sm:mt-0">
-          <div className="flex items-center rounded-md bg-secondary p-1 w-full sm:w-auto">
-            <Button
-              variant={!isPreviewMode ? "primary" : "ghost"}
-              size="sm"
-              onClick={() => setIsPreviewMode(false)}
-              className="flex-1"
-            >
-              <Edit className="h-5 w-5 mr-2" />
-              Editar
-            </Button>
-            <Button
-              variant={isPreviewMode ? "primary" : "ghost"}
-              size="sm"
-              onClick={() => setIsPreviewMode(true)}
-              className="flex-1"
-            >
-              <Eye className="h-5 w-5 mr-2" />
-              Vista previa
-            </Button>
-          </div>
-
-          <Separator orientation="vertical" className="h-8 hidden sm:block" />
-
-          <div className="flex gap-2 w-full sm:w-auto">
-            {hasUnsavedChanges && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleReset}
-                className="flex-1"
-              >
-                <RotateCcw className="h-5 w-5 mr-2" />
-                Descartar
-              </Button>
-            )}
-            <Button
-              variant={hasUnsavedChanges ? "default" : "outline"}
-              size="sm"
-              onClick={handleSave}
-              disabled={!hasUnsavedChanges}
-              className="flex-1"
-            >
-              <Save className="h-5 w-5 mr-2" />
-              Guardar
-            </Button>
-
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="icon">
-                  <MoreHorizontal className="h-5 w-5" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={handleDuplicate}>
-                  <Copy className="h-5 w-5 mr-2" />
-                  Duplicar
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Eliminar
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={handleExportJson}>
-                  <Download className="h-5 w-5 mr-2" />
-                  Exportar JSON
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <DropdownMenuItem
-                      onSelect={(e) => e.preventDefault()}
-                      className="text-destructive focus:text-destructive"
-                    >
-                      <Trash2 className="h-5 w-5 mr-2" />
-                      Eliminar
-                    </DropdownMenuItem>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>
-                        ¿Estás absolutamente seguro?
-                      </AlertDialogTitle>
-                      <AlertDialogDescription>
-                        Esta acción no se puede deshacer. Se eliminará
-                        permanentemente tu perfil
-                        <span className="font-bold"> {profile.name}</span> y
-                        todos sus datos.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                      <AlertDialogAction onClick={handleDelete}>
-                        Continuar
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-        </div>
-      </header>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>
+                    ¿Estás absolutamente seguro?
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Esta acción no se puede deshacer. Se eliminará
+                    permanentemente tu perfil
+                    <span className="font-bold"> {profile.name}</span> y todos
+                    sus datos.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleDelete}>
+                    Continuar
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+      <Tabs
+        value={isPreviewMode ? "preview" : "editor"}
+        onValueChange={(value) => setIsPreviewMode(value === "preview")}
+        className="w-full"
+      >
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="editor">
+            <Edit className="h-4 w-4 mr-2" />
+            Editor
+          </TabsTrigger>
+          <TabsTrigger value="preview">
+            <Eye className="h-4 w-4 mr-2" />
+            Vista Previa
+          </TabsTrigger>
+        </TabsList>
+      </Tabs>
+    </header>
+  );
 
-      <main className="flex-grow p-4 sm:p-8 overflow-auto print:p-0 print:overflow-visible">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 print:grid-cols-1 print:gap-0">
-          {/* Form Panel - hidden on print */}
-          <Card className="p-6 print:hidden">
+  return (
+    <div className="flex flex-col h-screen bg-secondary print:h-auto print:overflow-visible print:bg-white">
+      {renderHeader()}
+      {renderMobileHeader()}
+
+      <main className="flex-grow lg:grid lg:grid-cols-2 lg:gap-8 lg:p-8 overflow-auto print:grid-cols-1 print:p-0 print:overflow-visible pt-36 lg:pt-0">
+        <div
+          className={`p-4 lg:p-0 ${
+            isPreviewMode ? "hidden lg:block" : "block"
+          } print:block`}
+        >
+          <Card className="h-full p-0 lg:p-6 print:shadow-none print:border-0">
             <ResumeForm data={currentData} onUpdate={handleDataUpdate} />
           </Card>
+        </div>
 
-          {/* Preview Panel - always visible and full width on print */}
-          <div className="relative print:static">
-            <Card className="p-8 sticky top-0 print:shadow-none print:border-0 print:p-0 print:static">
+        <div
+          className={`p-4 lg:p-0 ${
+            isPreviewMode ? "block" : "hidden lg:block"
+          } print:block`}
+        >
+          <div className="relative h-full">
+            <Card className="h-full overflow-auto p-2 sm:p-8 sticky top-0 print:shadow-none print:border-0 print:p-0 print:static">
               <ResumeRenderer
                 data={currentData}
                 template={selectedTemplate.id as TemplateType}
               />
-              {hasUnsavedChanges && (
-                <div className="absolute top-4 right-4 bg-yellow-200 text-yellow-800 px-3 py-1 rounded-full text-sm font-medium print:hidden">
-                  Cambios sin guardar
-                </div>
-              )}
             </Card>
           </div>
         </div>
       </main>
+
+      <AnimatePresence>
+        {hasUnsavedChanges && (
+          <motion.div
+            className="fixed bottom-4 right-4 z-50 flex flex-col gap-3 lg:hidden"
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 50 }}
+          >
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={handleReset}
+              className="rounded-full h-14 w-14 shadow-lg bg-background"
+            >
+              <X className="h-6 w-6" />
+            </Button>
+            <Button
+              size="icon"
+              onClick={handleSave}
+              className="rounded-full h-14 w-14 shadow-lg"
+            >
+              <Save className="h-6 w-6" />
+            </Button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
