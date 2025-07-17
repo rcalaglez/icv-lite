@@ -169,7 +169,7 @@ export const ResumeEditor: React.FC = () => {
               />
             ) : (
               <>
-                <h2 className="text-2xl font-bold">{profile.name}</h2>
+                <h2 className="font-bold">{profile.name}</h2>
                 <Pencil className="h-6 w-6 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
               </>
             )}
@@ -180,7 +180,7 @@ export const ResumeEditor: React.FC = () => {
               handleTemplateChange(value as TemplateType)
             }
           >
-            <SelectTrigger className="w-full sm:w-[320px] h-14 text-lg font-bold border-4 border-solid">
+            <SelectTrigger className="w-full sm:max-w-[320px] h-14 text-lg font-bold border-4 border-solid">
               <SelectValue placeholder="Seleccionar plantilla" />
             </SelectTrigger>
             <SelectContent>

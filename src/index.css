@@ -42,35 +42,35 @@
 }
 
 :root {
-  --font-primary: 'Onest', sans-serif;
+  --font-primary: "Onest", sans-serif;
 
-  --background: #FFFFFF;
-  --foreground: #1D2B48;
-  
-  --card: #FFFFFF;
-  --card-foreground: #1D2B48;
+  --background: #ffffff;
+  --foreground: #1d2b48;
 
-  --popover: #FFFFFF;
-  --popover-foreground: #1D2B48;
+  --card: #ffffff;
+  --card-foreground: #1d2b48;
+
+  --popover: #ffffff;
+  --popover-foreground: #1d2b48;
 
   --primary: #2c3e50;
-  --primary-foreground: #FFFFFF;
+  --primary-foreground: #ffffff;
 
-  --secondary: #F7F9FC;
-  --secondary-foreground: #1D2B48;
+  --secondary: #f7f9fc;
+  --secondary-foreground: #1d2b48;
 
-  --muted: #F7F9FC;
-  --muted-foreground: #5A647B;
+  --muted: #f7f9fc;
+  --muted-foreground: #5a647b;
 
-  --accent: #00A79D;
-  --accent-foreground: #FFFFFF;
+  --accent: #00a79d;
+  --accent-foreground: #ffffff;
 
-  --destructive: #DC3545;
-  --destructive-foreground: #FFFFFF;
+  --destructive: #dc3545;
+  --destructive-foreground: #ffffff;
 
-  --border: #EAEBEE;
-  --input: #EAEBEE;
-  --ring: #00A79D;
+  --border: #2c3e50;
+  --input: #eaebee;
+  --ring: #00a79d;
 
   --radius: 12px;
   --radius-medium: 12px;
@@ -78,33 +78,33 @@
 }
 
 .dark {
-  --background: #1D2B48;
-  --foreground: #FFFFFF;
-  
-  --card: #1D2B48;
-  --card-foreground: #FFFFFF;
+  --background: #1d2b48;
+  --foreground: #ffffff;
 
-  --popover: #1D2B48;
-  --popover-foreground: #FFFFFF;
+  --card: #1d2b48;
+  --card-foreground: #ffffff;
+
+  --popover: #1d2b48;
+  --popover-foreground: #ffffff;
 
   --primary: #2c3e50;
-  --primary-foreground: #FFFFFF;
+  --primary-foreground: #ffffff;
 
   --secondary: #131c31;
-  --secondary-foreground: #FFFFFF;
+  --secondary-foreground: #ffffff;
 
   --muted: #131c31;
   --muted-foreground: #a0aec0;
 
-  --accent: #00A79D;
-  --accent-foreground: #FFFFFF;
+  --accent: #00a79d;
+  --accent-foreground: #ffffff;
 
-  --destructive: #DC3545;
-  --destructive-foreground: #FFFFFF;
+  --destructive: #dc3545;
+  --destructive-foreground: #ffffff;
 
   --border: #2c3e50;
   --input: #2c3e50;
-  --ring: #00A79D;
+  --ring: #00a79d;
 }
 
 @layer base {

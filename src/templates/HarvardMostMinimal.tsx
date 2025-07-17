@@ -5,8 +5,8 @@ import type {
   ResumeEducation,
   ResumeCertificate,
 } from "../types/resume";
-import { useDynamicStyles } from '@/hooks/useDynamicStyles';
-import styles from './HarvardMostMinimal.css?raw';
+import { useDynamicStyles } from "@/hooks/useDynamicStyles";
+import styles from "./HarvardMostMinimal.css?raw";
 import { formatDate, formatDateRange } from "@/utils/formatters";
 
 interface HarvardMostMinimalProps {
@@ -110,7 +110,7 @@ const Skills: React.FC<{ skills: NonNullable<ResumeData["skills"]> }> = ({
   skills,
 }) => (
   <section className="section">
-    <h2 className="section-title">Habilidades Técnicas</h2>
+    <h2 className="section-title">Competencias</h2>
     <div className="skills-grid">
       {skills.map((skill, index) => (
         <div key={index} className="skill-item">
@@ -185,7 +185,9 @@ const Interests: React.FC<{
 );
 
 // Main component
-export const HarvardMostMinimal: React.FC<HarvardMostMinimalProps> = ({ data }) => {
+export const HarvardMostMinimal: React.FC<HarvardMostMinimalProps> = ({
+  data,
+}) => {
   useDynamicStyles(styles);
 
   const {
@@ -222,19 +224,19 @@ export const HarvardMostMinimal: React.FC<HarvardMostMinimalProps> = ({ data }) 
       {/* Education Section */}
       {education && education.length > 0 && <Education education={education} />}
 
-      {/* Skills Section */}
-      {skills && skills.length > 0 && <Skills skills={skills} />}
-
-      {/* Languages Section */}
-      {languages && languages.length > 0 && <Languages languages={languages} />}
-
       {/* Certificates Section */}
       {certificates && certificates.length > 0 && (
         <Certificates certificates={certificates} />
       )}
 
+      {/* Languages Section */}
+      {languages && languages.length > 0 && <Languages languages={languages} />}
+
       {/* Interests Section */}
       {interests && interests.length > 0 && <Interests interests={interests} />}
+
+      {/* Skills Section */}
+      {skills && skills.length > 0 && <Skills skills={skills} />}
     </div>
   );
 };
