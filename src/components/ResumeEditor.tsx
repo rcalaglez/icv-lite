@@ -147,15 +147,15 @@ export const ResumeEditor: React.FC = () => {
   const selectedTemplate = profile.template;
 
   const renderHeader = () => (
-    <header className="hidden lg:flex flex-col sm:flex-row items-center justify-between p-4 bg-background border-b print:hidden">
-      <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
-        <Button variant="outline" size="icon" asChild>
+    <header className="hidden lg:flex items-center justify-between gap-4 p-4 bg-background border-b print:hidden">
+      <div className="flex items-center gap-4 flex-grow">
+        <Button variant="outline" size="icon" asChild className="h-10 w-10">
           <Link to="/">
             <ChevronLeft className="h-5 w-5" />
           </Link>
         </Button>
         <div
-          className="group flex items-center gap-2 cursor-pointer"
+          className="group flex items-center gap-2 cursor-pointer min-w-[300px]"
           onClick={() => setIsEditingName(true)}
         >
           {isEditingName ? (
@@ -166,11 +166,11 @@ export const ResumeEditor: React.FC = () => {
               onBlur={handleNameSave}
               onKeyDown={handleNameKeyDown}
               autoFocus
-              className="bg-transparent border-b border-primary focus:outline-none text-2xl font-bold"
+              className="bg-transparent border-b border-primary focus:outline-none text-2xl font-bold w-full"
             />
           ) : (
             <>
-              <h2 className="text-2xl font-bold">{profile.name}</h2>
+              <h2 className="text-2xl font-bold truncate">{profile.name}</h2>
               <Pencil className="h-5 w-5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
             </>
           )}
@@ -179,16 +179,12 @@ export const ResumeEditor: React.FC = () => {
           value={selectedTemplate.id}
           onValueChange={(value) => handleTemplateChange(value as TemplateType)}
         >
-          <SelectTrigger className="w-full sm:max-w-[320px] h-12 text-lg">
+          <SelectTrigger className="h-10 text-md max-w-[320px]">
             <SelectValue placeholder="Seleccionar plantilla" />
           </SelectTrigger>
           <SelectContent>
             {availableTemplates.map((template) => (
-              <SelectItem
-                key={template.id}
-                value={template.id}
-                className="text-lg"
-              >
+              <SelectItem key={template.id} value={template.id}>
                 {template.name}
               </SelectItem>
             ))}
@@ -196,35 +192,35 @@ export const ResumeEditor: React.FC = () => {
         </Select>
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2">
         {hasUnsavedChanges && (
-          <Button variant="ghost" onClick={handleReset}>
-            <RotateCcw className="h-5 w-5 mr-2" />
+          <Button variant="ghost" onClick={handleReset} className="h-10">
+            <RotateCcw className="h-4 w-4 mr-2" />
             Descartar
           </Button>
         )}
         <Button
           onClick={handleSave}
           disabled={!hasUnsavedChanges}
-          className="min-w-[120px]"
+          className="h-10 min-w-[120px]"
         >
-          <Save className="h-5 w-5 mr-2" />
+          <Save className="h-4 w-4 mr-2" />
           {hasUnsavedChanges ? "Guardar" : "Guardado"}
         </Button>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="icon">
+            <Button variant="outline" size="icon" className="h-10 w-10">
               <MoreHorizontal className="h-5 w-5" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem onClick={handleDuplicate}>
-              <Copy className="h-5 w-5 mr-2" />
+              <Copy className="h-4 w-4 mr-2" />
               Duplicar
             </DropdownMenuItem>
             <DropdownMenuItem onClick={handleExportJson}>
-              <Download className="h-5 w-5 mr-2" />
+              <Download className="h-4 w-4 mr-2" />
               Exportar JSON
             </DropdownMenuItem>
             <DropdownMenuSeparator />
@@ -234,7 +230,7 @@ export const ResumeEditor: React.FC = () => {
                   onSelect={(e) => e.preventDefault()}
                   className="text-destructive focus:text-destructive"
                 >
-                  <Trash2 className="h-5 w-5 mr-2" />
+                  <Trash2 className="h-4 w-4 mr-2" />
                   Eliminar
                 </DropdownMenuItem>
               </AlertDialogTrigger>
@@ -267,8 +263,8 @@ export const ResumeEditor: React.FC = () => {
   const renderMobileHeader = () => (
     <header className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-background border-b print:hidden">
       <div className="flex items-center justify-between p-2">
-        <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" asChild>
+        <div className="flex items-center gap-1">
+          <Button variant="ghost" size="icon" asChild className="h-10 w-10">
             <Link to="/">
               <ChevronLeft className="h-6 w-6" />
             </Link>
@@ -285,7 +281,7 @@ export const ResumeEditor: React.FC = () => {
             />
           ) : (
             <h2
-              className="text-lg font-bold truncate"
+              className="text-lg font-bold truncate cursor-pointer py-2"
               onClick={() => setIsEditingName(true)}
             >
               {profile.name}
@@ -298,7 +294,7 @@ export const ResumeEditor: React.FC = () => {
           value={selectedTemplate.id}
           onValueChange={(value) => handleTemplateChange(value as TemplateType)}
         >
-          <SelectTrigger className="flex-grow text-md">
+          <SelectTrigger className="h-10 flex-grow text-md">
             <SelectValue placeholder="Seleccionar plantilla" />
           </SelectTrigger>
           <SelectContent>
@@ -311,7 +307,7 @@ export const ResumeEditor: React.FC = () => {
         </Select>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="icon">
+            <Button variant="outline" size="icon" className="h-10 w-10">
               <MoreHorizontal className="h-5 w-5" />
             </Button>
           </DropdownMenuTrigger>
@@ -363,12 +359,12 @@ export const ResumeEditor: React.FC = () => {
         onValueChange={(value) => setIsPreviewMode(value === "preview")}
         className="w-full"
       >
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="editor">
+        <TabsList className="grid w-full grid-cols-2 h-12">
+          <TabsTrigger value="editor" className="text-md">
             <Edit className="h-4 w-4 mr-2" />
             Editor
           </TabsTrigger>
-          <TabsTrigger value="preview">
+          <TabsTrigger value="preview" className="text-md">
             <Eye className="h-4 w-4 mr-2" />
             Vista Previa
           </TabsTrigger>
@@ -378,15 +374,15 @@ export const ResumeEditor: React.FC = () => {
   );
 
   return (
-    <div className="flex flex-col h-screen bg-secondary print:h-auto print:overflow-visible print:bg-white">
+    <div className="flex flex-col h-screen bg-secondary print:h-auto print:bg-white">
       {renderHeader()}
       {renderMobileHeader()}
 
-      <main className="flex-grow lg:grid lg:grid-cols-2 lg:gap-8 lg:p-8 overflow-auto print:grid-cols-1 print:p-0 print:overflow-visible pt-36 lg:pt-0">
+      <main className="flex-grow overflow-auto pt-40 lg:pt-4 lg:grid lg:grid-cols-2 lg:gap-8 lg:p-8 print:pt-0 print:grid-cols-1 print:p-0 print:overflow-visible">
         <div
-          className={`p-4 lg:p-0 ${
+          className={`lg:p-0 ${
             isPreviewMode ? "hidden lg:block" : "block"
-          } print:block`}
+          } print:hidden`}
         >
           <Card className="h-full p-0 lg:p-6 print:shadow-none print:border-0">
             <ResumeForm data={currentData} onUpdate={handleDataUpdate} />
@@ -398,8 +394,8 @@ export const ResumeEditor: React.FC = () => {
             isPreviewMode ? "block" : "hidden lg:block"
           } print:block`}
         >
-          <div className="relative h-full">
-            <Card className="h-full overflow-auto p-2 sm:p-8 sticky top-0 print:shadow-none print:border-0 print:p-0 print:static">
+          <div className="relative h-full print:h-auto">
+            <Card className="h-full overflow-auto p-2 sm:p-8 print:h-auto print:overflow-visible print:shadow-none print:border-0 print:p-0 print:static">
               <ResumeRenderer
                 data={currentData}
                 template={selectedTemplate.id as TemplateType}
@@ -412,7 +408,7 @@ export const ResumeEditor: React.FC = () => {
       <AnimatePresence>
         {hasUnsavedChanges && (
           <motion.div
-            className="fixed bottom-4 right-4 z-50 flex flex-col gap-3 lg:hidden"
+            className="fixed bottom-4 right-4 z-50 flex flex-col gap-3 lg:hidden print:hidden"
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 50 }}
