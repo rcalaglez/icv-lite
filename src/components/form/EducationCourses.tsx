@@ -21,25 +21,20 @@ const EducationCourses: React.FC<EducationCoursesProps> = ({
   educationIndex,
   control,
 }) => {
-  const {
-    fields: courseFields,
-    append: appendCourse,
-    remove: removeCourse,
-  } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control,
-    name: `education.${educationIndex}.courses` as const,
+    name: `education.${educationIndex}.courses` as any,
   });
 
   const handleAddCourse = useCallback(() => {
-    console.log("Adding course for education index:", educationIndex);
-    appendCourse("");
-  }, [appendCourse, educationIndex]);
+    append("");
+  }, [append]);
 
   const handleRemoveCourse = useCallback(
     (index: number) => {
-      removeCourse(index);
+      remove(index);
     },
-    [removeCourse]
+    [remove]
   );
 
   return (
@@ -56,7 +51,7 @@ const EducationCourses: React.FC<EducationCoursesProps> = ({
           Añadir curso
         </Button>
       </div>
-      {courseFields.map((field, courseIndex) => (
+      {fields.map((field, courseIndex) => (
         <div key={field.id} className="flex gap-2">
           <FormField
             control={control}
@@ -76,8 +71,8 @@ const EducationCourses: React.FC<EducationCoursesProps> = ({
           />
           <Button
             type="button"
-            variant="outline"
-            size="sm"
+            variant="destructive"
+            size="icon"
             onClick={() => handleRemoveCourse(courseIndex)}
           >
             <Trash2 className="h-4 w-4" />

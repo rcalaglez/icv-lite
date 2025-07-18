@@ -21,25 +21,20 @@ const InterestKeywords: React.FC<InterestKeywordsProps> = ({
   interestIndex,
   control,
 }) => {
-  const {
-    fields: keywordFields,
-    append: appendKeyword,
-    remove: removeKeyword,
-  } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control,
-    name: `interests.${interestIndex}.keywords` as const,
+    name: `interests.${interestIndex}.keywords` as any,
   });
 
   const handleAddKeyword = useCallback(() => {
-    console.log("Adding keyword for interest index:", interestIndex);
-    appendKeyword("");
-  }, [appendKeyword, interestIndex]);
+    append("");
+  }, [append]);
 
   const handleRemoveKeyword = useCallback(
     (index: number) => {
-      removeKeyword(index);
+      remove(index);
     },
-    [removeKeyword]
+    [remove]
   );
 
   return (
@@ -56,7 +51,7 @@ const InterestKeywords: React.FC<InterestKeywordsProps> = ({
           Añadir palabra
         </Button>
       </div>
-      {keywordFields.map((field, keywordIndex) => (
+      {fields.map((field, keywordIndex) => (
         <div key={field.id} className="flex gap-2">
           <FormField
             control={control}
@@ -78,8 +73,8 @@ const InterestKeywords: React.FC<InterestKeywordsProps> = ({
           />
           <Button
             type="button"
-            variant="outline"
-            size="sm"
+            variant="destructive"
+            size="icon"
             onClick={() => handleRemoveKeyword(keywordIndex)}
           >
             <Trash2 className="h-4 w-4" />

@@ -1,5 +1,4 @@
-
-import type { CVProfile, Template } from "../types/resume";
+import type { CVProfile } from "../types/resume";
 import { availableTemplates } from "@/templates/templates";
 
 const defaultTemplate = availableTemplates[0];

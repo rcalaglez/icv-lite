@@ -7,7 +7,8 @@ interface UseEditorStateProps {
 }
 
 export const useEditorState = ({ profileId }: UseEditorStateProps) => {
-  const { getProfileById, updateProfileData, updateProfileName } = useResumeStore();
+  const { getProfileById, updateProfileData, updateProfileName } =
+    useResumeStore();
   const profile = getProfileById(profileId);
 
   const [currentData, setCurrentData] = useState<ResumeData>(
@@ -48,9 +49,12 @@ export const useEditorState = ({ profileId }: UseEditorStateProps) => {
     }
   }, [profile]);
 
-  const handleNameChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setEditedName(e.target.value);
-  }, []);
+  const handleNameChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setEditedName(e.target.value);
+    },
+    []
+  );
 
   const handleNameSave = useCallback(() => {
     if (profile && editedName.trim() !== "" && editedName !== profile.name) {
@@ -59,14 +63,17 @@ export const useEditorState = ({ profileId }: UseEditorStateProps) => {
     setIsEditingName(false);
   }, [profile, editedName, updateProfileName]);
 
-  const handleNameKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      handleNameSave();
-    } else if (e.key === "Escape") {
-      setEditedName(profile?.name || "");
-      setIsEditingName(false);
-    }
-  }, [profile, handleNameSave]);
+  const handleNameKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === "Enter") {
+        handleNameSave();
+      } else if (e.key === "Escape") {
+        setEditedName(profile?.name || "");
+        setIsEditingName(false);
+      }
+    },
+    [profile, handleNameSave]
+  );
 
   return {
     profile,

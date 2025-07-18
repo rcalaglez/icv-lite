@@ -22,25 +22,20 @@ const WorkHighlights: React.FC<WorkHighlightsProps> = ({
   workIndex,
   control,
 }) => {
-  const {
-    fields: highlightFields,
-    append: appendHighlight,
-    remove: removeHighlight,
-  } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control,
-    name: `work.${workIndex}.highlights` as const,
+    name: `work.${workIndex}.highlights` as any,
   });
 
   const handleAddHighlight = useCallback(() => {
-    console.log("Adding highlight for work index:", workIndex);
-    appendHighlight("");
-  }, [appendHighlight, workIndex]);
+    append("");
+  }, [append]);
 
   const handleRemoveHighlight = useCallback(
     (index: number) => {
-      removeHighlight(index);
+      remove(index);
     },
-    [removeHighlight]
+    [remove]
   );
 
   return (
@@ -57,7 +52,7 @@ const WorkHighlights: React.FC<WorkHighlightsProps> = ({
           Añadir logro
         </Button>
       </div>
-      {highlightFields.map((field, highlightIndex) => (
+      {fields.map((field, highlightIndex) => (
         <div key={field.id} className="flex gap-2">
           <FormField
             control={control}
@@ -78,8 +73,8 @@ const WorkHighlights: React.FC<WorkHighlightsProps> = ({
           />
           <Button
             type="button"
-            variant="outline"
-            size="sm"
+            variant="destructive"
+            size="icon"
             onClick={() => handleRemoveHighlight(highlightIndex)}
           >
             <Trash2 className="h-4 w-4" />
