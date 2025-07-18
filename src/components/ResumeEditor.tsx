@@ -27,6 +27,7 @@ import {
   Download,
   MoreHorizontal,
   X,
+  Printer,
 } from "lucide-react";
 import type { TemplateType } from "../types/resume";
 import { useEditorState } from "@/hooks/useEditorState";
@@ -123,6 +124,10 @@ export const ResumeEditor: React.FC = () => {
     }
   };
 
+  const handlePrint = () => {
+    window.print();
+  };
+
   const handleTemplateChange = (templateId: TemplateType) => {
     const newTemplate = availableTemplates.find((t) => t.id === templateId);
     if (newTemplate && profile) {
@@ -214,7 +219,7 @@ export const ResumeEditor: React.FC = () => {
               <MoreHorizontal className="h-5 w-5" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
+          <DropdownMenuContent align="end" className="print:hidden">
             <DropdownMenuItem onClick={handleDuplicate}>
               <Copy className="h-4 w-4 mr-2" />
               Duplicar
@@ -222,6 +227,10 @@ export const ResumeEditor: React.FC = () => {
             <DropdownMenuItem onClick={handleExportJson}>
               <Download className="h-4 w-4 mr-2" />
               Exportar JSON
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={handlePrint}>
+              <Printer className="h-4 w-4 mr-2" />
+              Imprimir / Exportar PDF
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <AlertDialog>
@@ -311,7 +320,7 @@ export const ResumeEditor: React.FC = () => {
               <MoreHorizontal className="h-5 w-5" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
+          <DropdownMenuContent align="end" className="print:hidden">
             <DropdownMenuItem onClick={handleDuplicate}>
               <Copy className="h-4 w-4 mr-2" />
               Duplicar
@@ -319,6 +328,10 @@ export const ResumeEditor: React.FC = () => {
             <DropdownMenuItem onClick={handleExportJson}>
               <Download className="h-4 w-4 mr-2" />
               Exportar JSON
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={handlePrint}>
+              <Printer className="h-4 w-4 mr-2" />
+              Imprimir / Exportar PDF
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <AlertDialog>
@@ -379,21 +392,13 @@ export const ResumeEditor: React.FC = () => {
       {renderMobileHeader()}
 
       <main className="flex-grow overflow-auto pt-40 lg:pt-4 lg:grid lg:grid-cols-2 lg:gap-8 lg:p-8 print:pt-0 print:grid-cols-1 print:p-0 print:overflow-visible">
-        <div
-          className={`lg:p-0 ${
-            isPreviewMode ? "hidden lg:block" : "block"
-          } print:hidden`}
-        >
+        <div className={`lg:p-0 ${isPreviewMode ? "hidden lg:block" : "block"} print:hidden`}>
           <Card className="h-full p-0 lg:p-6 print:shadow-none print:border-0">
             <ResumeForm data={currentData} onUpdate={handleDataUpdate} />
           </Card>
         </div>
 
-        <div
-          className={`p-4 lg:p-0 ${
-            isPreviewMode ? "block" : "hidden lg:block"
-          } print:block`}
-        >
+        <div className={`p-4 lg:p-0 ${isPreviewMode ? "block" : "hidden lg:block"} print:block`}>
           <div className="relative h-full print:h-auto">
             <Card className="h-full overflow-auto p-2 sm:p-8 print:h-auto print:overflow-visible print:shadow-none print:border-0 print:p-0 print:static">
               <ResumeRenderer
@@ -434,3 +439,4 @@ export const ResumeEditor: React.FC = () => {
     </div>
   );
 };
+
