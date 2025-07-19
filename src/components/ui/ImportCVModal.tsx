@@ -6,6 +6,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "./tabs";
 import { type ResumeData } from "@/types/resume";
 import { UploadCloud } from "lucide-react";
 import useResumeStore from "@/hooks/useResumeStore";
+import { toast } from "sonner";
+import { ZodError } from "zod";
 
 interface ImportCVModalProps {
   onClose: () => void;
@@ -15,7 +17,6 @@ export function ImportCVModal({ onClose }: ImportCVModalProps) {
   const [activeTab, setActiveTab] = useState("json");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const importProfile = useResumeStore((state) => state.importProfile);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const modalRoot = document.getElementById("modal-root");
@@ -31,19 +32,20 @@ export function ImportCVModal({ onClose }: ImportCVModalProps) {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       setSelectedFile(event.target.files[0]);
-      setError(null);
     }
   };
 
   const handleImport = useCallback(async () => {
     if (!selectedFile) {
-      setError("Por favor, selecciona un archivo para importar.");
+      toast.error(
+        "Error de importación: Por favor, selecciona un archivo para importar."
+      );
       return;
     }
 
     setIsLoading(true);
-    setError(null);
 
+    let errorMessage = "";
     try {
       const resumeData: ResumeData = await FileImporterService.importFile(
         selectedFile
@@ -52,13 +54,19 @@ export function ImportCVModal({ onClose }: ImportCVModalProps) {
         resumeData,
         selectedFile.name.split(".").slice(0, -1).join(".")
       );
+      toast.success("¡CV importado exitosamente!");
       onClose();
     } catch (err) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError("Ocurrió un error desconocido.");
+      errorMessage =
+        "Error de importación: Ocurrió un error desconocido al importar el CV.";
+      if (err instanceof ZodError) {
+        errorMessage =
+          "Error de importación: El archivo no tiene el formato de CV esperado. Por favor, verifica el contenido.";
+        console.error("Zod validation error:", err.errors);
+      } else if (err instanceof Error) {
+        errorMessage = `Error de importación: ${err.message}`;
       }
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -132,7 +140,6 @@ export function ImportCVModal({ onClose }: ImportCVModalProps) {
             )}
             <p className="text-xs text-gray-400 mt-1">{`Tipos soportados: ${getAcceptedFileTypes()}`}</p>
           </div>
-          {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
         </div>
 
         <div className="flex justify-end gap-4 mt-8">

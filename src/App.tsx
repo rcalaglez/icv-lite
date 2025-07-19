@@ -1,14 +1,21 @@
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
 import { ResumeEditor } from "./components/ResumeEditor";
 import ProfileList from "./components/ProfileList";
 import MainLayout from "./components/layout/MainLayout";
 import "./App.css";
 import { AnimatePresence, motion } from "framer-motion";
+import { Toaster } from "./components/ui/sonner";
 
 function App() {
   return (
     <Router>
       <AppContent />
+      <Toaster richColors />
     </Router>
   );
 }
