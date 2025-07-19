@@ -4,6 +4,7 @@ import {
   HarmBlockThreshold,
 } from "@google/generative-ai";
 import type { ResumeData } from "@/types/resume";
+import { ResumeDataSchema } from "@/lib/validation/resumeSchema";
 
 const MODEL_NAME = "gemini-1.5-flash";
 const API_KEY = import.meta.env.VITE_AI_API_KEY;
@@ -121,7 +122,8 @@ export async function analyzeCVWithAI(file: File): Promise<ResumeData> {
       }
 
       Your response must be only the JSON object, without any markdown formatting, comments or other text.
-      If the file does not appear to be a CV or if you cannot extract the required information, your response must be a JSON object with an "error" property, like this: { "error": "Could not parse the document as a CV." }`,
+      
+      Crucially, if the document provided is NOT a resume or curriculum vitae, or if it does not contain the essential components of a CV (such as a clear name, work experience, and educational background), or if you cannot extract sufficient information to populate the required fields of the ResumeData structure, your response MUST be a JSON object with an "error" property, like this: { "error": "The provided document does not appear to be a valid CV or lacks essential information." }`,
     },
   ];
 
@@ -139,7 +141,8 @@ export async function analyzeCVWithAI(file: File): Promise<ResumeData> {
       throw new Error(jsonResponse.error);
     }
 
-    return jsonResponse as ResumeData;
+    const validatedData = ResumeDataSchema.parse(jsonResponse);
+    return validatedData as ResumeData;
   } catch (error) {
     console.error("Error analyzing CV with AI:", error);
     if (error instanceof Error) {

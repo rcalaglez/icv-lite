@@ -1,5 +1,6 @@
 import type { Importer } from "./types";
 import type { ResumeData } from "@/types/resume";
+import { ResumeDataSchema } from "@/lib/validation/resumeSchema";
 
 export const jsonImporter: Importer = {
   import: (file: File): Promise<ResumeData> => {
@@ -14,8 +15,8 @@ export const jsonImporter: Importer = {
       reader.onload = (event) => {
         try {
           const data = JSON.parse(event.target?.result as string);
-          // TODO añadir validación de esquema para ResumeData
-          resolve(data as ResumeData);
+          const validatedData = ResumeDataSchema.parse(data);
+          resolve(validatedData as ResumeData);
         } catch (error) {
           reject(new Error("Error al parsear el archivo JSON: " + error));
         }
