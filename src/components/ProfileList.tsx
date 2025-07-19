@@ -1,7 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import useResumeStore from "@/hooks/useResumeStore";
 import { Button } from "@/components/ui/button";
-import { FileImporterService } from "@/lib/importers/fileImporterService";
 import { Upload, Plus } from "lucide-react";
 import {
   Card,
@@ -10,38 +9,20 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
-import React, { useRef } from "react";
+import React from "react";
 import { motion } from "framer-motion";
+import { useLayout } from "./layout/MainLayout"; // Import the context hook
 
 const ProfileList = () => {
   const profiles = useResumeStore((state) => state.profiles);
   const createProfile = useResumeStore((state) => state.createProfile);
-  const importProfile = useResumeStore((state) => state.importProfile);
   const navigate = useNavigate();
+  const { openImportModal } = useLayout(); // Consume the context
 
   const handleCreateProfile = () => {
     const newProfileId = createProfile();
     navigate(`/profile/${newProfileId}`);
   };
-
-  const handleImportFile = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    try {
-      const importedData = await FileImporterService.importFile(file);
-      const newProfileId = importProfile(importedData, file.name.split(".")[0]);
-      navigate(`/profile/${newProfileId}`);
-    } catch (error) {
-      console.error("Error al importar el archivo:", error);
-      alert(`Error al importar el archivo: ${(error as Error).message}`);
-    }
-    event.target.value = "";
-  };
-
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   return (
     <motion.div
@@ -55,20 +36,13 @@ const ProfileList = () => {
         <h1 className="text-4xl font-bold">Mis Perfiles</h1>
         <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
           <Button
-            onClick={() => fileInputRef.current?.click()}
+            onClick={openImportModal} // Use the function from context
             size="lg"
             className="w-full sm:w-auto"
           >
             <Upload className="h-6 w-6 mr-2" />
             Importar CV
           </Button>
-          <input
-            type="file"
-            ref={fileInputRef}
-            onChange={handleImportFile}
-            className="hidden"
-            accept=".json"
-          />
           <Button
             onClick={handleCreateProfile}
             size="lg"

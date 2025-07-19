@@ -1,9 +1,19 @@
-import { type Importer, jsonImporter } from "./";
+import {
+  type Importer,
+  jsonImporter,
+  pdfAiImporter,
+  imageAiImporter,
+} from "./";
 import type { ResumeData } from "@/types/resume";
 
 const importers: { [key: string]: Importer } = {
   "application/json": jsonImporter,
-  // Aquí se añadirían otros importadores en el futuro: "application/pdf": pdfImporter, etc.
+  "application/pdf": pdfAiImporter,
+  "image/jpeg": imageAiImporter,
+  "image/png": imageAiImporter,
+  "image/webp": imageAiImporter,
+  "image/gif": imageAiImporter,
+  "image/bmp": imageAiImporter,
 };
 
 export const FileImporterService = {
