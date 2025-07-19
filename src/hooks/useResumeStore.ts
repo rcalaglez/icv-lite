@@ -3,6 +3,7 @@ import { persist } from "zustand/middleware";
 import { availableTemplates } from "@/templates/templates";
 import type { CVProfile, ResumeData, Template } from "../types/resume";
 import { sampleResumes } from "@/data/resumeExample";
+import { defaultResumeAdvice } from "@/data/defaultResumeAdvice";
 
 interface ResumeStore {
   profiles: CVProfile[];
@@ -46,18 +47,7 @@ const useResumeStore = create<ResumeStore>()(
           template: defaultTemplate,
           createdAt: now,
           updatedAt: now,
-          data: {
-            basics: {
-              name: "Tu Nombre",
-              label: "Tu Profesión",
-            },
-            work: [],
-            education: [],
-            skills: [],
-            languages: [],
-            interests: [],
-            certificates: [],
-          },
+          data: defaultResumeAdvice,
         };
 
         set((state) => ({
