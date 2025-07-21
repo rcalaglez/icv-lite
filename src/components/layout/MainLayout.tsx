@@ -101,7 +101,7 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
               {isCollapsed ? <ChevronsRight /> : <ChevronsLeft />}
             </Button>
           </div>
-          <nav className="flex flex-col p-4">
+          <nav className="flex flex-col p-4 space-y-2">
             <Link
               to="/"
               className={`px-4 py-2 text-lg font-semibold rounded-lg hover:bg-secondary ${
@@ -110,6 +110,15 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
               onClick={() => setIsMobileMenuOpen(false)}
             >
               {isCollapsed ? "📝" : "Gestión de perfiles"}
+            </Link>
+            <Link
+              to="/evaluate"
+              className={`px-4 py-2 text-lg font-semibold rounded-lg hover:bg-secondary ${
+                isCollapsed ? "text-center" : ""
+              }`}
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              {isCollapsed ? "✨" : "Evaluar CV"}
             </Link>
           </nav>
         </aside>

@@ -10,6 +10,7 @@ export const pdfAiImporter: Importer = {
 
     try {
       const resumeData = await analyzeCVWithAI(file);
+      console.log("resultado", resumeData);
       return resumeData;
     } catch (error) {
       if (error instanceof Error) {

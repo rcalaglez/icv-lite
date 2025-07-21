@@ -7,6 +7,7 @@ import {
 import { ResumeEditor } from "./components/ResumeEditor";
 import ProfileList from "./components/ProfileList";
 import MainLayout from "./components/layout/MainLayout";
+import { EvaluationView } from "./features/evaluation/EvaluationView";
 import "./App.css";
 import { AnimatePresence, motion } from "framer-motion";
 import { Toaster } from "./components/ui/sonner";
@@ -37,6 +38,21 @@ function AppContent() {
                 transition={{ duration: 0.1 }}
               >
                 <ProfileList />
+              </motion.div>
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/evaluate"
+          element={
+            <MainLayout>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.1 }}
+              >
+                <EvaluationView />
               </motion.div>
             </MainLayout>
           }

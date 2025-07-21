@@ -13,10 +13,10 @@ if (!API_KEY) {
   throw new Error("VITE_AI_API_KEY is not defined in .env file");
 }
 
-const genAI = new GoogleGenerativeAI(API_KEY);
-const model = genAI.getGenerativeModel({ model: MODEL_NAME });
+export const genAI = new GoogleGenerativeAI(API_KEY);
+export const model = genAI.getGenerativeModel({ model: MODEL_NAME });
 
-const generationConfig = {
+export const generationConfig = {
   temperature: 0.4,
   topK: 32,
   topP: 1,
@@ -135,6 +135,7 @@ export async function analyzeCVWithAI(file: File): Promise<ResumeData> {
     });
 
     const responseText = result.response.text();
+    console.log(responseText);
     const jsonResponse = JSON.parse(responseText);
 
     if (jsonResponse.error) {
