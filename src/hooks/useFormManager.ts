@@ -107,11 +107,15 @@ export const useFormManager = ({ data, onUpdate }: UseFormManagerProps) => {
   const defaultValues = useMemo(() => {
     const normalized = {
       ...data,
-      work:
+      work: (
         data.work?.map((w) => ({
           ...w,
           highlights: w.highlights || [],
-        })) || [],
+        })) || []
+      ).sort((a, b) => {
+        if (!a.startDate || !b.startDate) return 0;
+        return new Date(b.startDate).getTime() - new Date(a.startDate).getTime();
+      }),
       education:
         data.education?.map((e) => ({
           ...e,

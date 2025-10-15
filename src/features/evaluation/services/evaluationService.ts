@@ -1,9 +1,5 @@
 import type { ResumeData } from "@/types/resume";
-import type {
-  CVScore,
-  SectionEvaluation,
-  JobMatchAnalysis,
-} from "@/types/evaluation";
+import type { CVScore } from "@/types/evaluation";
 import { model, generationConfig } from "@/lib/ai/geminiService";
 import { v4 as uuidv4 } from "uuid";
 

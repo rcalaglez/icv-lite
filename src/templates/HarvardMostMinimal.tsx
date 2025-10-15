@@ -39,38 +39,45 @@ const ContactInfo: React.FC<{ basics: ResumeData["basics"] }> = ({
   </div>
 );
 
-const WorkExperience: React.FC<{ work: ResumeWork[] }> = ({ work }) => (
-  <section className="section">
-    <h2 className="section-title">Experiencia Laboral</h2>
-    {work.map((job, index) => (
-      <div key={index} className="work-item">
-        <div className="work-header">
-          <h3 className="position">{job.position}</h3>
-          <span className="date-range">
-            {formatDateRange(job.startDate, job.endDate)}
-          </span>
-        </div>
-        <div className="company">
-          {job.url ? (
-            <a href={job.url} target="_blank" rel="noopener noreferrer">
-              {job.name}
-            </a>
-          ) : (
-            job.name
+const WorkExperience: React.FC<{ work: ResumeWork[] }> = ({ work }) => {
+  const sortedWork = [...work].sort((a, b) => {
+    if (!a.startDate || !b.startDate) return 0;
+    return new Date(b.startDate).getTime() - new Date(a.startDate).getTime();
+  });
+
+  return (
+    <section className="section">
+      <h2 className="section-title">Experiencia Laboral</h2>
+      {sortedWork.map((job, index) => (
+        <div key={index} className="work-item">
+          <div className="work-header">
+            <h3 className="position">{job.position}</h3>
+            <span className="date-range">
+              {formatDateRange(job.startDate, job.endDate)}
+            </span>
+          </div>
+          <div className="company">
+            {job.url ? (
+              <a href={job.url} target="_blank" rel="noopener noreferrer">
+                {job.name}
+              </a>
+            ) : (
+              job.name
+            )}
+          </div>
+          {job.summary && <p className="work-summary">{job.summary}</p>}
+          {job.highlights && job.highlights.length > 0 && (
+            <ul className="highlights">
+              {job.highlights.map((highlight, idx) => (
+                <li key={idx}>{highlight}</li>
+              ))}
+            </ul>
           )}
         </div>
-        {job.summary && <p className="work-summary">{job.summary}</p>}
-        {job.highlights && job.highlights.length > 0 && (
-          <ul className="highlights">
-            {job.highlights.map((highlight, idx) => (
-              <li key={idx}>{highlight}</li>
-            ))}
-          </ul>
-        )}
-      </div>
-    ))}
-  </section>
-);
+      ))}
+    </section>
+  );
+};
 
 const Education: React.FC<{ education: ResumeEducation[] }> = ({
   education,
