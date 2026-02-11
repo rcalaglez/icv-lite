@@ -4,6 +4,7 @@ import type {
   ResumeWork,
   ResumeEducation,
   ResumeCertificate,
+  ResumeProject,
 } from "../types/resume";
 import { useDynamicStyles } from '@/hooks/useDynamicStyles';
 import styles from './HarvardMinimal.css?raw';
@@ -131,6 +132,44 @@ const Education: React.FC<{ education: ResumeEducation[] }> = ({
   </section>
 );
 
+const Projects: React.FC<{ projects: ResumeProject[] }> = ({ projects }) => {
+  const sortedProjects = [...projects].sort((a, b) => {
+    if (!a.startDate || !b.startDate) return 0;
+    return new Date(b.startDate).getTime() - new Date(a.startDate).getTime();
+  });
+
+  return (
+    <section className="section">
+      <h2 className="section-title">Proyectos</h2>
+      {sortedProjects.map((project, index) => (
+        <div key={index} className="work-item">
+          <div className="work-header">
+            <h3 className="position">{project.name}</h3>
+            <span className="date-range">
+              {formatDateRange(project.startDate, project.endDate)}
+            </span>
+          </div>
+          <div className="company">
+            {project.url && (
+              <a href={project.url} target="_blank" rel="noopener noreferrer">
+                {project.url}
+              </a>
+            )}
+          </div>
+          {project.description && <p className="work-summary">{project.description}</p>}
+          {project.highlights && project.highlights.length > 0 && (
+            <ul className="highlights">
+              {project.highlights.map((highlight, idx) => (
+                <li key={idx}>{highlight}</li>
+              ))}
+            </ul>
+          )}
+        </div>
+      ))}
+    </section>
+  );
+};
+
 const Skills: React.FC<{ skills: NonNullable<ResumeData["skills"]> }> = ({
   skills,
 }) => (
@@ -217,6 +256,7 @@ export const HarvardMinimal: React.FC<HarvardMinimalProps> = ({ data }) => {
     basics,
     work,
     education,
+    projects,
     skills,
     languages,
     certificates,
@@ -252,6 +292,9 @@ export const HarvardMinimal: React.FC<HarvardMinimalProps> = ({ data }) => {
 
       {/* Education Section */}
       {education && education.length > 0 && <Education education={education} />}
+
+      {/* Projects Section */}
+      {projects && projects.length > 0 && <Projects projects={projects} />}
 
       {/* Skills Section */}
       {skills && skills.length > 0 && <Skills skills={skills} />}

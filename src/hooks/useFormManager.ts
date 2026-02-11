@@ -93,6 +93,18 @@ export const resumeSchema = z.object({
       })
     )
     .optional(),
+  projects: z
+    .array(
+      z.object({
+        name: z.string().min(1, "Nombre del proyecto requerido"),
+        description: z.string().optional(),
+        highlights: z.array(z.string()).optional(),
+        url: z.string().url("URL inválida").optional().or(z.literal("")),
+        startDate: z.string().optional(),
+        endDate: z.string().optional(),
+      })
+    )
+    .optional(),
 });
 
 interface UseFormManagerProps {
@@ -128,6 +140,11 @@ export const useFormManager = ({ data, onUpdate }: UseFormManagerProps) => {
         data.interests?.map((i) => ({
           ...i,
           keywords: i.keywords || [],
+        })) || [],
+      projects:
+        data.projects?.map((p) => ({
+          ...p,
+          highlights: p.highlights || [],
         })) || [],
       basics: {
         ...data.basics,

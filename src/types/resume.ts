@@ -94,11 +94,21 @@ export interface ResumeReference {
   reference: string;
 }
 
+export interface ResumeProject {
+  name: string;
+  description?: string;
+  highlights?: string[];
+  url?: string;
+  startDate?: string;
+  endDate?: string;
+}
+
 export interface ResumeData {
   basics: ResumeBasics;
   work?: ResumeWork[];
   volunteer?: ResumeVolunteer[];
   education?: ResumeEducation[];
+  projects?: ResumeProject[];
   awards?: ResumeAward[];
   certificates?: ResumeCertificate[];
   publications?: ResumePublication[];

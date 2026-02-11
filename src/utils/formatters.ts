@@ -8,9 +8,11 @@ export const formatDate = (dateString: string): string => {
 
 export const formatDateRange = (
   startDate: string,
-  endDate?: string
+  endDate?: string,
 ): string => {
+  console.log(endDate);
   const start = formatDate(startDate);
-  const end = endDate ? formatDate(endDate) : "Presente";
+  const end =
+    endDate && endDate !== "Presente" ? formatDate(endDate) : "Presente";
   return `${start} - ${end}`;
 };

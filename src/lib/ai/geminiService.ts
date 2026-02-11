@@ -6,7 +6,7 @@ import {
 import type { ResumeData } from "@/types/resume";
 import { ResumeDataSchema } from "@/lib/validation/resumeSchema";
 
-const MODEL_NAME = "gemini-1.5-flash";
+const MODEL_NAME = "gemini-2.5-flash-lite";
 const API_KEY = import.meta.env.VITE_AI_API_KEY;
 
 if (!API_KEY) {

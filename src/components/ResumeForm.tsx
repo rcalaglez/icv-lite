@@ -31,9 +31,11 @@ import {
   Wrench,
   Globe,
   Languages,
+  Lightbulb,
 } from "lucide-react";
 import type { ResumeData } from "../types/resume";
 import WorkHighlights from "./form/WorkHighlights";
+import ProjectHighlights from "./form/ProjectHighlights";
 import EducationCourses from "./form/EducationCourses";
 import InterestKeywords from "./form/InterestKeywords";
 import { useFormManager } from "../hooks/useFormManager";
@@ -53,6 +55,7 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onUpdate }) => {
   const { fields: certificateFields, append: appendCertificate, remove: removeCertificate } = useFieldArray({ control: form.control, name: "certificates" });
   const { fields: interestFields, append: appendInterest, remove: removeInterest } = useFieldArray({ control: form.control, name: "interests" });
   const { fields: profileFields, append: appendProfile, remove: removeProfile } = useFieldArray({ control: form.control, name: "basics.profiles" });
+  const { fields: projectFields, append: appendProject, remove: removeProject } = useFieldArray({ control: form.control, name: "projects" });
 
   const formSections = [
     {
@@ -155,6 +158,34 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onUpdate }) => {
                   </div>
                   <Separator />
                   <EducationCourses educationIndex={index} control={form.control} />
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        </div>
+      ),
+    },
+    {
+      id: "projects",
+      title: "Proyectos",
+      icon: Lightbulb,
+      content: (
+        <div className="p-1">
+          <Card>
+            <CardHeader><CardTitle className="flex items-center justify-between text-lg"><div className="flex items-center gap-2"><Lightbulb className="h-5 w-5" />Proyectos</div><Button type="button" variant="outline" size="sm" onClick={() => appendProject({ name: "", description: "", startDate: "", endDate: "", url: "", highlights: [] })}><Plus className="h-4 w-4 mr-2" />Añadir</Button></CardTitle></CardHeader>
+            <CardContent className="space-y-6">
+              {projectFields.map((field, index) => (
+                <div key={field.id} className="border rounded-lg p-4 space-y-4">
+                  <div className="flex justify-between items-center"><h4 className="font-medium">Proyecto #{index + 1}</h4><Button type="button" variant="destructive" size="icon" onClick={() => removeProject(index)}><Trash2 className="h-4 w-4" /></Button></div>
+                  <FormField control={form.control} name={`projects.${index}.name`} render={({ field }) => (<FormItem><FormLabel>Nombre *</FormLabel><FormControl><Input placeholder="Mi proyecto" {...field} /></FormControl><FormMessage /></FormItem>)} />
+                  <FormField control={form.control} name={`projects.${index}.url`} render={({ field }) => (<FormItem><FormLabel>URL</FormLabel><FormControl><Input placeholder="https://mi-proyecto.com" {...field} /></FormControl><FormMessage /></FormItem>)} />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <FormField control={form.control} name={`projects.${index}.startDate`} render={({ field }) => (<FormItem><FormLabel>Fecha inicio</FormLabel><FormControl><Input type="date" {...field} /></FormControl><FormMessage /></FormItem>)} />
+                    <FormField control={form.control} name={`projects.${index}.endDate`} render={({ field }) => (<FormItem><FormLabel>Fecha fin</FormLabel><FormControl><Input type="date" {...field} /></FormControl><FormMessage /></FormItem>)} />
+                  </div>
+                  <FormField control={form.control} name={`projects.${index}.description`} render={({ field }) => (<FormItem><FormLabel>Descripción</FormLabel><FormControl><Textarea placeholder="Describe tu proyecto..." {...field} /></FormControl><FormMessage /></FormItem>)} />
+                  <Separator />
+                  <ProjectHighlights projectIndex={index} control={form.control} />
                 </div>
               ))}
             </CardContent>
@@ -282,7 +313,7 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onUpdate }) => {
           {/* Desktop Tabs View */}
           <div className="hidden lg:block">
             <Tabs defaultValue="basics" className="w-full">
-              <TabsList className="grid w-full grid-cols-6 h-12">
+              <TabsList className="grid w-full grid-cols-7 h-12">
                 {formSections.map((section) => (
                   <TabsTrigger value={section.id} key={section.id} className="text-md">
                     {section.title}
