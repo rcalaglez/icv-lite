@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils"
 import { Label } from "@/components/ui/label"
 import { FormFieldContext, FormItemContext } from "@/components/ui/formFieldContext"
 import { useFormField } from "@/components/ui/useFormField"
+import { Form } from "@/components/ui/formProvider"
 
 const FormField = <
   TFieldValues extends FieldValues = FieldValues,
@@ -116,3 +117,4 @@ export { FormLabel }
 export { FormControl }
 export { FormDescription }
 export { FormField }
+export { Form }

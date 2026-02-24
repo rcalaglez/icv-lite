@@ -72,7 +72,7 @@ const WorkExperience: React.FC<{ work: ResumeWork[] }> = ({ work }) => {
           <div className="work-header">
             <h3 className="position">{job.position}</h3>
             <span className="date-range">
-              {formatDateRange(job.startDate, job.endDate)}
+              {formatDateRange(job.startDate ?? "", job.endDate)}
             </span>
           </div>
           <div className="company">
@@ -112,7 +112,7 @@ const Education: React.FC<{ education: ResumeEducation[] }> = ({
           {edu.endDate && (
             <span className="date-range">
               {edu.startDate
-                ? formatDateRange(edu.startDate, edu.endDate)
+                ? formatDateRange(edu.startDate ?? "", edu.endDate)
                 : formatDate(edu.endDate)}
             </span>
           )}
@@ -146,7 +146,7 @@ const Projects: React.FC<{ projects: ResumeProject[] }> = ({ projects }) => {
           <div className="work-header">
             <h3 className="position">{project.name}</h3>
             <span className="date-range">
-              {formatDateRange(project.startDate, project.endDate)}
+              {formatDateRange(project.startDate ?? "", project.endDate)}
             </span>
           </div>
           <div className="company">
