@@ -2,6 +2,7 @@ import { useState } from "react";
 import { evaluateAts, evaluateCvOnly } from "../services/evaluationService";
 import type { EvaluationResult } from "@/types/evaluation";
 import type { ResumeData } from "@/types/resume";
+import { AiNotConfiguredError } from "@/lib/ai/errors";
 
 export const useCvEvaluation = () => {
   const [result, setResult] = useState<EvaluationResult | null>(null);
@@ -23,9 +24,13 @@ export const useCvEvaluation = () => {
         setResult({ kind: "cv", data: cv });
       }
     } catch (e) {
-      const errorMessage =
-        e instanceof Error ? e.message : "Ocurrió un error desconocido";
-      setError(errorMessage);
+      if (e instanceof AiNotConfiguredError) {
+        setError("AI_NOT_CONFIGURED");
+      } else {
+        const errorMessage =
+          e instanceof Error ? e.message : "Ocurrió un error desconocido";
+        setError(errorMessage);
+      }
     } finally {
       setIsLoading(false);
     }

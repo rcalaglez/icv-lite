@@ -18,13 +18,18 @@ import {
 import useResumeStore from "@/hooks/useResumeStore";
 import { ImportCVModal } from "@/components/ui/ImportCVModal";
 import { LayoutContext } from "./layoutContext";
+import { AiSettingsDialog } from "@/components/ai/AiSettingsDialog";
+import { useAiConfigStore, isAiConfigured } from "@/stores/aiConfigStore";
 
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isImportModalOpen, setImportModalOpen] = useState(false);
+  const [isAiSettingsOpen, setIsAiSettingsOpen] = useState(false);
   const navigate = useNavigate();
   const createProfile = useResumeStore((state) => state.createProfile);
+  const aiConfig = useAiConfigStore((s) => s.config);
+  const aiConfigured = isAiConfigured(aiConfig);
 
   const handleCreateProfile = () => {
     const newProfileId = createProfile();
@@ -42,6 +47,11 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
         {isImportModalOpen && (
           <ImportCVModal onClose={() => setImportModalOpen(false)} />
         )}
+
+        <AiSettingsDialog
+          open={isAiSettingsOpen}
+          onOpenChange={setIsAiSettingsOpen}
+        />
 
         {/* Mobile and Tablet Header */}
         <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between h-16 px-4 bg-background border-b lg:hidden">
@@ -63,6 +73,10 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
               <DropdownMenuItem onClick={openImportModal}>
                 <Upload className="h-4 w-4 mr-2" />
                 Importar CV
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setIsAiSettingsOpen(true)}>
+                <span className="mr-2">🤖</span>
+                Configuración IA
               </DropdownMenuItem>
               <DropdownMenuItem onClick={handleCreateProfile}>
                 <Plus className="h-4 w-4 mr-2" />
@@ -114,6 +128,25 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
             >
               {isCollapsed ? "✨" : "Evaluar CV"}
             </Link>
+
+            <button
+              type="button"
+              onClick={() => {
+                setIsAiSettingsOpen(true);
+                setIsMobileMenuOpen(false);
+              }}
+              className={`relative px-4 py-2 text-lg font-semibold rounded-lg hover:bg-secondary text-left ${
+                isCollapsed ? "text-center" : ""
+              }`}
+            >
+              {isCollapsed ? "🤖" : "Configuración IA"}
+              {!aiConfigured && (
+                <span
+                  className="absolute top-2 right-2 h-2 w-2 rounded-full bg-red-500"
+                  aria-label="IA no configurada"
+                />
+              )}
+            </button>
           </nav>
         </aside>
 
