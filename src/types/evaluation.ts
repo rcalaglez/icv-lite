@@ -90,3 +90,58 @@ export type CVScore = {
    */
   jobMatch?: JobMatchAnalysis;
 };
+
+export type AtsSuggestionAction = "replace" | "remove" | "include" | "reorder";
+
+export type AtsSuggestionImpact = "high" | "medium" | "low";
+
+export type AtsSuggestionEvidence =
+  | "supported" // Se puede afirmar con evidencia clara en el CV.
+  | "needs_user_input" // Requiere que el usuario aporte datos (no inventar).
+  | "not_supported"; // No hay evidencia; se debe marcar como gap.
+
+export type AtsSuggestion = {
+  id: string;
+  action: AtsSuggestionAction;
+  impact: AtsSuggestionImpact;
+  evidence: AtsSuggestionEvidence;
+  targetSection:
+    | "summaryProfile"
+    | "experience"
+    | "projects"
+    | "skills"
+    | "education"
+    | "contactInfo"
+    | "general";
+  rationale: string;
+  beforeText?: string;
+  afterText?: string;
+};
+
+export type AtsEvaluation = {
+  id: string;
+  evaluationDate: string;
+  alignmentScore: number; // 0-100: alineacion con la oferta.
+  atsReadinessScore: number; // 0-100: parseabilidad/compatibilidad ATS.
+  overallScore: number; // 0-100: combinado, util para UI.
+  summary: string;
+  overallFit: string;
+  keywordAnalysis: {
+    matchedKeywords: string[];
+    missingKeywords: string[];
+    recommendedVariants: string[];
+  };
+  breakdown: {
+    requirementsCoverageScore: number;
+    evidenceScore: number;
+    roleTargetingScore: number;
+    formattingScore: number;
+  };
+  strengths: string[];
+  gaps: string[];
+  suggestions: AtsSuggestion[];
+};
+
+export type EvaluationResult =
+  | { kind: "cv"; data: CVScore }
+  | { kind: "ats"; data: AtsEvaluation };
