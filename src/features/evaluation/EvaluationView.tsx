@@ -9,7 +9,7 @@ import useResumeStore from '@/hooks/useResumeStore';
 export const EvaluationView = () => {
   const [step, setStep] = useState(1);
   const [selectedProfileId, setSelectedProfileId] = useState<string | null>(null);
-  const { cvScore, isLoading, error, performEvaluation } = useCvEvaluation();
+  const { result, isLoading, error, performEvaluation } = useCvEvaluation();
   const getProfileById = useResumeStore((state) => state.getProfileById);
 
   const handleProfileSelected = (profileId: string) => {
@@ -39,8 +39,8 @@ export const EvaluationView = () => {
         if (error) {
           return <p>Error: {error}</p>; // Placeholder for error display
         }
-        if (cvScore) {
-          return <Step3_EvaluationReport cvScore={cvScore} />;
+        if (result) {
+          return <Step3_EvaluationReport result={result} />;
         }
         return null; // Should not happen
       default:

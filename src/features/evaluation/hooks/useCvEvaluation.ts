@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { evaluateCv } from "../services/evaluationService";
-import type { CVScore } from "@/types/evaluation";
+import { evaluateAts, evaluateCvOnly } from "../services/evaluationService";
+import type { EvaluationResult } from "@/types/evaluation";
 import type { ResumeData } from "@/types/resume";
 
 export const useCvEvaluation = () => {
-  const [cvScore, setCvScore] = useState<CVScore | null>(null);
+  const [result, setResult] = useState<EvaluationResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -15,8 +15,13 @@ export const useCvEvaluation = () => {
     setIsLoading(true);
     setError(null);
     try {
-      const score = await evaluateCv(resumeData, jobOfferText);
-      setCvScore(score);
+      if (jobOfferText && jobOfferText.trim().length > 0) {
+        const ats = await evaluateAts(resumeData, jobOfferText);
+        setResult({ kind: "ats", data: ats });
+      } else {
+        const cv = await evaluateCvOnly(resumeData);
+        setResult({ kind: "cv", data: cv });
+      }
     } catch (e) {
       const errorMessage =
         e instanceof Error ? e.message : "Ocurrió un error desconocido";
@@ -27,7 +32,7 @@ export const useCvEvaluation = () => {
   };
 
   return {
-    cvScore,
+    result,
     isLoading,
     error,
     performEvaluation,
