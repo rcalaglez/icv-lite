@@ -8,6 +8,8 @@ import { UploadCloud } from "lucide-react";
 import useResumeStore from "@/hooks/useResumeStore";
 import { toast } from "sonner";
 import { ZodError } from "zod";
+import { useAiConfigStore, isAiConfigured } from "@/stores/aiConfigStore";
+import { AiSettingsDialog } from "@/components/ai/AiSettingsDialog";
 
 interface ImportCVModalProps {
   onClose: () => void;
@@ -17,7 +19,9 @@ export function ImportCVModal({ onClose }: ImportCVModalProps) {
   const [activeTab, setActiveTab] = useState("json");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [aiDialogOpen, setAiDialogOpen] = useState(false);
   const importProfile = useResumeStore((state) => state.importProfile);
+  const aiConfig = useAiConfigStore((s) => s.config);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const modalRoot = document.getElementById("modal-root");
 
@@ -40,6 +44,13 @@ export function ImportCVModal({ onClose }: ImportCVModalProps) {
       toast.error(
         "Error de importación: Por favor, selecciona un archivo para importar."
       );
+      return;
+    }
+
+    const requiresAi = activeTab === "pdf" || activeTab === "image";
+    if (requiresAi && !isAiConfigured(aiConfig)) {
+      toast.error("Configura tu proveedor/modelo y API key para usar IA.");
+      setAiDialogOpen(true);
       return;
     }
 
@@ -70,7 +81,7 @@ export function ImportCVModal({ onClose }: ImportCVModalProps) {
     } finally {
       setIsLoading(false);
     }
-  }, [selectedFile, importProfile, onClose]);
+  }, [selectedFile, importProfile, onClose, activeTab, aiConfig]);
 
   const getAcceptedFileTypes = () => {
     switch (activeTab) {
@@ -89,6 +100,7 @@ export function ImportCVModal({ onClose }: ImportCVModalProps) {
   const modalContent = (
     <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex justify-center items-center z-[100]">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md m-4">
+        <AiSettingsDialog open={aiDialogOpen} onOpenChange={setAiDialogOpen} />
         <h2 className="text-2xl font-bold mb-4">Importar CV</h2>
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
           <TabsList>
@@ -146,7 +158,10 @@ export function ImportCVModal({ onClose }: ImportCVModalProps) {
           <Button variant="outline" onClick={onClose} disabled={isLoading}>
             Cancelar
           </Button>
-          <Button onClick={handleImport} disabled={!selectedFile || isLoading}>
+          <Button
+            onClick={handleImport}
+            disabled={!selectedFile || isLoading}
+          >
             {isLoading ? "Importando..." : "Importar"}
           </Button>
         </div>
