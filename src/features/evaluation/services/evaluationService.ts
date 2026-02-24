@@ -1,6 +1,6 @@
 import type { ResumeData } from "@/types/resume";
 import type { AtsEvaluation, CVScore } from "@/types/evaluation";
-import { model, generationConfig } from "@/lib/ai/geminiService";
+import { getConfiguredAiClient } from "@/lib/ai/getConfiguredClient";
 import { v4 as uuidv4 } from "uuid";
 
 // Definiciones de tipos para inyectar en el prompt
@@ -159,14 +159,10 @@ Genera un objeto JSON AtsEvaluation (sin texto adicional). Todo el texto en espa
 export const evaluateCvOnly = async (resumeData: ResumeData): Promise<CVScore> => {
   const prompt = buildCvOnlyPrompt(resumeData);
 
-  try {
-    const result = await model.generateContent({
-      contents: [{ role: "user", parts: [{ text: prompt }] }],
-      generationConfig,
-    });
+  const client = getConfiguredAiClient();
 
-    const responseText = result.response.text();
-    const rawCvScore = JSON.parse(responseText) as CVScore;
+  try {
+    const rawCvScore = await client.generateJson<CVScore>({ prompt });
 
     // Añadir id y evaluationDate en el cliente
     const finalCvScore: CVScore = {
@@ -190,14 +186,10 @@ export const evaluateAts = async (
 ): Promise<AtsEvaluation> => {
   const prompt = buildAtsPrompt(resumeData, jobOfferText);
 
-  try {
-    const result = await model.generateContent({
-      contents: [{ role: "user", parts: [{ text: prompt }] }],
-      generationConfig,
-    });
+  const client = getConfiguredAiClient();
 
-    const responseText = result.response.text();
-    const rawAts = JSON.parse(responseText) as AtsEvaluation;
+  try {
+    const rawAts = await client.generateJson<AtsEvaluation>({ prompt });
 
     return {
       ...rawAts,
