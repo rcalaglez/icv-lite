@@ -17,6 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 import type { AiProvider } from "@/lib/ai/types";
 import { useAiConfigStore, isAiConfigured } from "@/stores/aiConfigStore";
@@ -94,18 +95,17 @@ export function AiSettingsDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-lg">
-        <DialogHeader>
-          <DialogTitle>Configuracion de IA</DialogTitle>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader className="space-y-3">
+          <DialogTitle>Configuración de IA</DialogTitle>
           <DialogDescription>
-            La API key se guarda localmente en tu navegador. No se envia a
-            servidores.
+            La API key se guarda localmente en tu navegador. No se envía a servidores.
           </DialogDescription>
         </DialogHeader>
 
-        <div className="grid gap-4">
+        <div className="grid gap-6 py-2">
           <div className="grid gap-2">
-            <Label>Proveedor</Label>
+            <Label className="text-sm font-medium">Proveedor</Label>
             <Select
               value={config.provider ?? ""}
               onValueChange={(v) => setProvider(v as AiProvider)}
@@ -125,7 +125,7 @@ export function AiSettingsDialog({
 
           {config.provider === "openai_compatible" && (
             <div className="grid gap-2">
-              <Label>Base URL</Label>
+              <Label className="text-sm font-medium">Base URL</Label>
               <Input
                 value={config.baseUrl}
                 onChange={(e) => setBaseUrl(e.target.value)}
@@ -135,26 +135,29 @@ export function AiSettingsDialog({
           )}
 
           <div className="grid gap-2">
-            <Label>API key</Label>
-            <div className="flex gap-2">
+            <Label className="text-sm font-medium">API Key</Label>
+            <div className="relative">
               <Input
                 value={config.apiKey}
                 onChange={(e) => setApiKey(e.target.value)}
                 type={showKey ? "text" : "password"}
                 placeholder="Pega tu API key"
+                className="pr-10"
               />
               <Button
                 type="button"
-                variant="outline"
+                variant="ghost"
+                size="sm"
+                className="absolute right-1 top-1/2 -translate-y-1/2 h-8 px-2 text-muted-foreground hover:text-foreground"
                 onClick={() => setShowKey((s) => !s)}
               >
-                {showKey ? "Ocultar" : "Mostrar"}
+                {showKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </Button>
             </div>
           </div>
 
           <div className="grid gap-2">
-            <Label>Modelo</Label>
+            <Label className="text-sm font-medium">Modelo</Label>
             <Select
               value={config.model}
               onValueChange={(v) => {
@@ -178,39 +181,37 @@ export function AiSettingsDialog({
               </SelectContent>
             </Select>
             {config.model === "__custom" && (
-              <div className="flex gap-2">
-                <Input
-                  value={customModel}
-                  onChange={(e) => setCustomModel(e.target.value)}
-                  placeholder="Escribe el model id"
-                />
-                <Button
-                  type="button"
-                  variant="secondary"
-                  onClick={() => {
-                    if (customModel.trim()) {
-                      setModel(customModel.trim());
-                      setCustomModel("");
-                    }
-                  }}
-                >
-                  Usar
-                </Button>
-              </div>
+              <Input
+                value={customModel}
+                onChange={(e) => setCustomModel(e.target.value)}
+                placeholder="Escribe el model id y presiona Enter"
+                className="mt-2"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && customModel.trim()) {
+                    setModel(customModel.trim());
+                    setCustomModel("");
+                  }
+                }}
+              />
             )}
           </div>
         </div>
 
-        <DialogFooter className="gap-2 sm:gap-0">
+        <DialogFooter className="flex flex-col-reverse sm:flex-row gap-3 sm:justify-between">
           <Button
             type="button"
             variant="outline"
             onClick={handleTest}
             disabled={isTesting}
+            className="w-full sm:w-auto"
           >
-            {isTesting ? "Probando..." : "Probar conexion"}
+            {isTesting ? "Probando..." : "Probar conexión"}
           </Button>
-          <Button type="button" onClick={handleSave}>
+          <Button
+            type="button"
+            onClick={handleSave}
+            className="w-full sm:w-auto"
+          >
             Guardar
           </Button>
         </DialogFooter>
