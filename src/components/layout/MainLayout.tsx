@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import React, { useState, createContext, useContext } from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   ChevronsLeft,
@@ -17,13 +17,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import useResumeStore from "@/hooks/useResumeStore";
 import { ImportCVModal } from "@/components/ui/ImportCVModal";
-
-// Create a context for the layout
-const LayoutContext = createContext<{
-  openImportModal: () => void;
-}>({ openImportModal: () => {} });
-
-export const useLayout = () => useContext(LayoutContext);
+import { LayoutContext } from "./layoutContext";
 
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);

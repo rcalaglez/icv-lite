@@ -24,11 +24,11 @@ const ProjectHighlights: React.FC<ProjectHighlightsProps> = ({
 }) => {
   const { fields, append, remove } = useFieldArray({
     control,
-    name: `projects.${projectIndex}.highlights` as any,
+    name: `projects.${projectIndex}.highlights` as never,
   });
 
   const handleAddHighlight = useCallback(() => {
-    append("");
+    append("" as never);
   }, [append]);
 
   const handleRemoveHighlight = useCallback(

@@ -59,22 +59,6 @@ export const ResumeEditor: React.FC = () => {
   const duplicateProfile = useResumeStore((state) => state.duplicateProfile);
   const navigate = useNavigate();
 
-  if (!profileId) {
-    return (
-      <div className="flex flex-col items-center justify-center h-screen p-4 text-center">
-        <h3 className="text-2xl font-semibold mb-4">
-          ID de perfil no proporcionado
-        </h3>
-        <p className="text-muted-foreground mb-8">
-          Por favor, selecciona un perfil para editar.
-        </p>
-        <Link to="/">
-          <Button variant="link">Volver a la lista</Button>
-        </Link>
-      </div>
-    );
-  }
-
   const {
     profile,
     hasUnsavedChanges,
@@ -90,7 +74,23 @@ export const ResumeEditor: React.FC = () => {
     handleNameChange,
     handleNameSave,
     handleNameKeyDown,
-  } = useEditorState({ profileId });
+  } = useEditorState({ profileId: profileId ?? "" });
+
+  if (!profileId) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen p-4 text-center">
+        <h3 className="text-2xl font-semibold mb-4">
+          ID de perfil no proporcionado
+        </h3>
+        <p className="text-muted-foreground mb-8">
+          Por favor, selecciona un perfil para editar.
+        </p>
+        <Link to="/">
+          <Button variant="link">Volver a la lista</Button>
+        </Link>
+      </div>
+    );
+  }
 
   const handleDelete = () => {
     if (profileId) {
@@ -439,4 +439,3 @@ export const ResumeEditor: React.FC = () => {
     </div>
   );
 };
-

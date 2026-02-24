@@ -24,11 +24,11 @@ const WorkHighlights: React.FC<WorkHighlightsProps> = ({
 }) => {
   const { fields, append, remove } = useFieldArray({
     control,
-    name: `work.${workIndex}.highlights` as any,
+    name: `work.${workIndex}.highlights` as never,
   });
 
   const handleAddHighlight = useCallback(() => {
-    append("");
+    append("" as never);
   }, [append]);
 
   const handleRemoveHighlight = useCallback(
