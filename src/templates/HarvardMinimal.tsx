@@ -225,6 +225,7 @@ const Certificates: React.FC<{ certificates: ResumeCertificate[] }> = ({
           <span className="certificate-date">{formatDate(cert.date)}</span>
         </div>
         <p className="certificate-issuer">{cert.issuer}</p>
+        {cert.keywords && <p className="certificate-keywords">{cert.keywords}</p>}
       </div>
     ))}
   </section>

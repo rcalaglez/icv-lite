@@ -82,6 +82,7 @@ export const resumeSchema = z.object({
         date: z.string().min(1, "Fecha requerida"),
         issuer: z.string().min(1, "Emisor requerido"),
         url: z.string().optional(),
+        keywords: z.string().optional(),
       })
     )
     .optional(),

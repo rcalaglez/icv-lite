@@ -237,7 +237,7 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onUpdate }) => {
       content: (
         <div className="p-1">
           <Card>
-            <CardHeader><CardTitle className="flex items-center justify-between text-lg"><div className="flex items-center gap-2"><Award className="h-5 w-5" />Certificaciones</div><Button type="button" variant="outline" size="sm" onClick={() => appendCertificate({ name: "", date: "", issuer: "", url: "" })}><Plus className="h-4 w-4 mr-2" />Añadir</Button></CardTitle></CardHeader>
+            <CardHeader><CardTitle className="flex items-center justify-between text-lg"><div className="flex items-center gap-2"><Award className="h-5 w-5" />Certificaciones</div><Button type="button" variant="outline" size="sm" onClick={() => appendCertificate({ name: "", date: "", issuer: "", url: "", keywords: "" })}><Plus className="h-4 w-4 mr-2" />Añadir</Button></CardTitle></CardHeader>
             <CardContent className="space-y-6">
               {certificateFields.map((field, index) => (
                 <div key={field.id} className="border rounded-lg p-4 space-y-4">
@@ -250,6 +250,7 @@ export const ResumeForm: React.FC<ResumeFormProps> = ({ data, onUpdate }) => {
                     <FormField control={form.control} name={`certificates.${index}.date`} render={({ field }) => (<FormItem><FormLabel>Fecha *</FormLabel><FormControl><Input type="date" {...field} /></FormControl><FormMessage /></FormItem>)} />
                     <FormField control={form.control} name={`certificates.${index}.url`} render={({ field }) => (<FormItem><FormLabel>URL</FormLabel><FormControl><Input placeholder="https://..." {...field} /></FormControl><FormMessage /></FormItem>)} />
                   </div>
+                  <FormField control={form.control} name={`certificates.${index}.keywords`} render={({ field }) => (<FormItem><FormLabel>Habilidades / Tecnologías</FormLabel><FormControl><Input placeholder="ej. Arquitectura Hexagonal, DDD, OpenFeign" {...field} /></FormControl><FormMessage /></FormItem>)} />
                 </div>
               ))}
             </CardContent>
