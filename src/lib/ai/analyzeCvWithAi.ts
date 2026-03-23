@@ -41,8 +41,18 @@ interface ResumeWork {
   name: string;
   position: string;
   url?: string;
-  startDate: string; // Use YYYY-MM-DD format if possible, otherwise, a string is fine.
-  endDate?: string; // Use YYYY-MM-DD format. Can be "Present".
+  startDate: string;
+  endDate?: string;
+  summary?: string;
+  highlights?: string[];
+}
+
+interface ResumeVolunteer {
+  organization: string;
+  position: string;
+  url?: string;
+  startDate: string;
+  endDate?: string;
   summary?: string;
   highlights?: string[];
 }
@@ -58,20 +68,71 @@ interface ResumeEducation {
   courses?: string[];
 }
 
-// Other interfaces like ResumeVolunteer, ResumeAward, etc., are omitted for brevity but you should populate them if you find relevant information.
+interface ResumeProject {
+  name: string;
+  description?: string;
+  highlights?: string[];
+  url?: string;
+  startDate?: string;
+  endDate?: string;
+}
+
+interface ResumeAward {
+  title: string;
+  date: string;
+  awarder: string;
+  summary?: string;
+}
+
+interface ResumeCertificate {
+  name: string;
+  date: string;
+  issuer: string;
+  url?: string;
+}
+
+interface ResumePublication {
+  name: string;
+  publisher: string;
+  releaseDate: string;
+  url?: string;
+  summary?: string;
+}
+
+interface ResumeSkill {
+  name: string;
+  level?: string;
+  keywords?: string[];
+}
+
+interface ResumeLanguage {
+  language: string;
+  fluency: string;
+}
+
+interface ResumeInterest {
+  name: string;
+  keywords?: string[];
+}
+
+interface ResumeReference {
+  name: string;
+  reference: string;
+}
 
 interface ResumeData {
   basics: ResumeBasics;
   work?: ResumeWork[];
-  volunteer?: any[]; // Populate if found
+  volunteer?: ResumeVolunteer[];
   education?: ResumeEducation[];
-  awards?: any[]; // Populate if found
-  certificates?: any[]; // Populate if found
-  publications?: any[]; // Populate if found
-  skills?: { name: string; level?: string; keywords?: string[] }[];
-  languages?: { language: string; fluency: string }[];
-  interests?: { name: string; keywords?: string[] }[];
-  references?: any[]; // Populate if found
+  projects?: ResumeProject[];
+  awards?: ResumeAward[];
+  certificates?: ResumeCertificate[];
+  publications?: ResumePublication[];
+  skills?: ResumeSkill[];
+  languages?: ResumeLanguage[];
+  interests?: ResumeInterest[];
+  references?: ResumeReference[];
 }
 
 Your response must be only the JSON object, without any markdown formatting, comments or other text.
