@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -27,6 +27,7 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
   const [isImportModalOpen, setImportModalOpen] = useState(false);
   const [isAiSettingsOpen, setIsAiSettingsOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const createProfile = useResumeStore((state) => state.createProfile);
   const aiConfig = useAiConfigStore((s) => s.config);
   const aiConfigured = isAiConfigured(aiConfig);
@@ -113,8 +114,8 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
             <Link
               to="/"
               className={`px-4 py-2 text-lg font-semibold rounded-lg hover:bg-secondary ${
-                isCollapsed ? "text-center" : ""
-              }`}
+                location.pathname === "/" ? "bg-secondary" : ""
+              } ${isCollapsed ? "text-center" : ""}`}
               onClick={() => setIsMobileMenuOpen(false)}
             >
               {isCollapsed ? "📝" : "Gestión de perfiles"}
@@ -122,8 +123,8 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
             <Link
               to="/evaluate"
               className={`px-4 py-2 text-lg font-semibold rounded-lg hover:bg-secondary ${
-                isCollapsed ? "text-center" : ""
-              }`}
+                location.pathname === "/evaluate" ? "bg-secondary" : ""
+              } ${isCollapsed ? "text-center" : ""}`}
               onClick={() => setIsMobileMenuOpen(false)}
             >
               {isCollapsed ? "✨" : "Evaluar CV"}
