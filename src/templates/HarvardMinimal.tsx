@@ -296,16 +296,16 @@ export const HarvardMinimal: React.FC<HarvardMinimalProps> = ({ data }) => {
       {/* Projects Section */}
       {projects && projects.length > 0 && <Projects projects={projects} />}
 
-      {/* Skills Section */}
-      {skills && skills.length > 0 && <Skills skills={skills} />}
-
-      {/* Languages Section */}
-      {languages && languages.length > 0 && <Languages languages={languages} />}
-
       {/* Certificates Section */}
       {certificates && certificates.length > 0 && (
         <Certificates certificates={certificates} />
       )}
+
+      {/* Languages Section */}
+      {languages && languages.length > 0 && <Languages languages={languages} />}
+
+      {/* Skills Section */}
+      {skills && skills.length > 0 && <Skills skills={skills} />}
 
       {/* Interests Section */}
       {interests && interests.length > 0 && <Interests interests={interests} />}
