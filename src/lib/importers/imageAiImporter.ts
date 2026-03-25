@@ -1,6 +1,7 @@
 import type { Importer } from "./types";
 import type { ResumeData } from "@/types/resume";
-import { analyzeCVWithAI } from "@/lib/ai/geminiService";
+import { analyzeCVWithAI } from "@/lib/ai/analyzeCvWithAi";
+import { getConfiguredAiClient } from "@/lib/ai/getConfiguredClient";
 
 // Lista de tipos MIME de imagen soportados
 const SUPPORTED_IMAGE_TYPES = [
@@ -18,7 +19,8 @@ export const imageAiImporter: Importer = {
     }
 
     try {
-      const resumeData = await analyzeCVWithAI(file);
+      const client = getConfiguredAiClient();
+      const resumeData = await analyzeCVWithAI(client, file);
       return resumeData;
     } catch (error) {
       if (error instanceof Error) {

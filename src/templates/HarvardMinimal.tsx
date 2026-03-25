@@ -72,7 +72,7 @@ const WorkExperience: React.FC<{ work: ResumeWork[] }> = ({ work }) => {
           <div className="work-header">
             <h3 className="position">{job.position}</h3>
             <span className="date-range">
-              {formatDateRange(job.startDate, job.endDate)}
+              {formatDateRange(job.startDate ?? "", job.endDate)}
             </span>
           </div>
           <div className="company">
@@ -112,7 +112,7 @@ const Education: React.FC<{ education: ResumeEducation[] }> = ({
           {edu.endDate && (
             <span className="date-range">
               {edu.startDate
-                ? formatDateRange(edu.startDate, edu.endDate)
+                ? formatDateRange(edu.startDate ?? "", edu.endDate)
                 : formatDate(edu.endDate)}
             </span>
           )}
@@ -146,7 +146,7 @@ const Projects: React.FC<{ projects: ResumeProject[] }> = ({ projects }) => {
           <div className="work-header">
             <h3 className="position">{project.name}</h3>
             <span className="date-range">
-              {formatDateRange(project.startDate, project.endDate)}
+              {formatDateRange(project.startDate ?? "", project.endDate)}
             </span>
           </div>
           <div className="company">
@@ -225,6 +225,7 @@ const Certificates: React.FC<{ certificates: ResumeCertificate[] }> = ({
           <span className="certificate-date">{formatDate(cert.date)}</span>
         </div>
         <p className="certificate-issuer">{cert.issuer}</p>
+        {cert.keywords && <p className="certificate-keywords">{cert.keywords}</p>}
       </div>
     ))}
   </section>
@@ -296,16 +297,16 @@ export const HarvardMinimal: React.FC<HarvardMinimalProps> = ({ data }) => {
       {/* Projects Section */}
       {projects && projects.length > 0 && <Projects projects={projects} />}
 
-      {/* Skills Section */}
-      {skills && skills.length > 0 && <Skills skills={skills} />}
-
-      {/* Languages Section */}
-      {languages && languages.length > 0 && <Languages languages={languages} />}
-
       {/* Certificates Section */}
       {certificates && certificates.length > 0 && (
         <Certificates certificates={certificates} />
       )}
+
+      {/* Languages Section */}
+      {languages && languages.length > 0 && <Languages languages={languages} />}
+
+      {/* Skills Section */}
+      {skills && skills.length > 0 && <Skills skills={skills} />}
 
       {/* Interests Section */}
       {interests && interests.length > 0 && <Interests interests={interests} />}

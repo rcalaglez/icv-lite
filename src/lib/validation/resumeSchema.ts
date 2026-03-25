@@ -65,6 +65,7 @@ const ResumeCertificateSchema = z.object({
   date: z.string().min(1, "La fecha es requerida."),
   issuer: z.string().min(1, "El emisor es requerido."),
   url: z.string().url().optional(),
+  keywords: z.string().optional(),
 });
 
 const ResumePublicationSchema = z.object({

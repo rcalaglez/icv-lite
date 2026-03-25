@@ -9,9 +9,8 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
-import React from "react";
 import { motion } from "framer-motion";
-import { useLayout } from "./layout/MainLayout"; // Import the context hook
+import { useLayout } from "./layout/layoutContext"; // Import the context hook
 
 const ProfileList = () => {
   const profiles = useResumeStore((state) => state.profiles);

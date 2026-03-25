@@ -1,6 +1,7 @@
 import type { Importer } from "./types";
 import type { ResumeData } from "@/types/resume";
-import { analyzeCVWithAI } from "@/lib/ai/geminiService";
+import { analyzeCVWithAI } from "@/lib/ai/analyzeCvWithAi";
+import { getConfiguredAiClient } from "@/lib/ai/getConfiguredClient";
 
 export const pdfAiImporter: Importer = {
   import: async (file: File): Promise<ResumeData> => {
@@ -9,7 +10,8 @@ export const pdfAiImporter: Importer = {
     }
 
     try {
-      const resumeData = await analyzeCVWithAI(file);
+      const client = getConfiguredAiClient();
+      const resumeData = await analyzeCVWithAI(client, file);
       console.log("resultado", resumeData);
       return resumeData;
     } catch (error) {

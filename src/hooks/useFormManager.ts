@@ -82,6 +82,7 @@ export const resumeSchema = z.object({
         date: z.string().min(1, "Fecha requerida"),
         issuer: z.string().min(1, "Emisor requerido"),
         url: z.string().optional(),
+        keywords: z.string().optional(),
       })
     )
     .optional(),
@@ -135,7 +136,10 @@ export const useFormManager = ({ data, onUpdate }: UseFormManagerProps) => {
         })) || [],
       skills: data.skills || [],
       languages: data.languages || [],
-      certificates: data.certificates || [],
+      certificates: (data.certificates || []).sort((a, b) => {
+        if (!a.date || !b.date) return 0;
+        return new Date(b.date).getTime() - new Date(a.date).getTime();
+      }),
       interests:
         data.interests?.map((i) => ({
           ...i,

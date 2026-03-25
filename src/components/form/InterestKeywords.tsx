@@ -23,11 +23,11 @@ const InterestKeywords: React.FC<InterestKeywordsProps> = ({
 }) => {
   const { fields, append, remove } = useFieldArray({
     control,
-    name: `interests.${interestIndex}.keywords` as any,
+    name: `interests.${interestIndex}.keywords` as never,
   });
 
   const handleAddKeyword = useCallback(() => {
-    append("");
+    append("" as never);
   }, [append]);
 
   const handleRemoveKeyword = useCallback(

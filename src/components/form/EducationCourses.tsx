@@ -23,11 +23,13 @@ const EducationCourses: React.FC<EducationCoursesProps> = ({
 }) => {
   const { fields, append, remove } = useFieldArray({
     control,
-    name: `education.${educationIndex}.courses` as any,
+    // react-hook-form no tipa paths anidados con arrays en este proyecto,
+    // pero el path es correcto para el schema de ResumeData.
+    name: `education.${educationIndex}.courses` as never,
   });
 
   const handleAddCourse = useCallback(() => {
-    append("");
+    append("" as never);
   }, [append]);
 
   const handleRemoveCourse = useCallback(
