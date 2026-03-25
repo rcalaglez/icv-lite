@@ -49,6 +49,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
 import { motion, AnimatePresence } from "framer-motion";
+import { toast } from "sonner";
 
 export const ResumeEditor: React.FC = () => {
   const { profileId } = useParams<{ profileId: string }>();
@@ -75,6 +76,63 @@ export const ResumeEditor: React.FC = () => {
     handleNameSave,
     handleNameKeyDown,
   } = useEditorState({ profileId: profileId ?? "" });
+
+  /**
+   * Valida y sanitiza el nombre del perfil para usar como título de documento
+   * @param name - Nombre del perfil a validar
+   * @returns Objeto con el nombre sanitizado y si es válido
+   */
+  const validateAndSanitizeProfileName = (
+    name: string | undefined | null
+  ): {
+    sanitizedName: string;
+    isValid: boolean;
+    reason?: string;
+  } => {
+    // Caso 1: Nombre no existe
+    if (!name) {
+      return {
+        sanitizedName: "iCV - Gestor de perfiles CV",
+        isValid: false,
+        reason: "El nombre del perfil está vacío",
+      };
+    }
+
+    // Caso 2: Limpiar espacios en blanco
+    const trimmedName = name.trim();
+
+    if (trimmedName.length === 0) {
+      return {
+        sanitizedName: "iCV - Gestor de perfiles CV",
+        isValid: false,
+        reason: "El nombre del perfil solo contiene espacios",
+      };
+    }
+
+    // Caso 3: Eliminar caracteres de control (newlines, tabs, etc.)
+    const cleanedName = trimmedName.replace(/[\n\r\t\f\v]/g, " ");
+
+    // Caso 4: Limitar longitud (máximo 100 caracteres para el título)
+    const maxLength = 100;
+    const finalName =
+      cleanedName.length > maxLength
+        ? cleanedName.substring(0, maxLength) + "..."
+        : cleanedName;
+
+    // Caso 5: Verificar que después de limpiar aún hay contenido
+    if (finalName.trim().length === 0) {
+      return {
+        sanitizedName: "iCV - Gestor de perfiles CV",
+        isValid: false,
+        reason: "El nombre del perfil contiene solo caracteres no válidos",
+      };
+    }
+
+    return {
+      sanitizedName: finalName,
+      isValid: true,
+    };
+  };
 
   if (!profileId) {
     return (
@@ -125,7 +183,32 @@ export const ResumeEditor: React.FC = () => {
   };
 
   const handlePrint = () => {
+    // Validar y sanitizar el nombre del perfil
+    const { sanitizedName, isValid, reason } = validateAndSanitizeProfileName(
+      profile?.name
+    );
+
+    // Si el nombre no es válido, mostrar toast de advertencia
+    if (!isValid && reason) {
+      toast.error(
+        `No se puede usar el nombre del perfil como título: ${reason}. Se usará el título por defecto.`
+      );
+    }
+
+    // Guardar título original
+    const originalTitle = document.title;
+
+    // Cambiar al nombre del perfil sanitizado
+    document.title = sanitizedName;
+
+    // Ejecutar impresión
     window.print();
+
+    // Restaurar título original después del diálogo
+    // Timeout para asegurar que el cambio se aplique antes de restaurar
+    setTimeout(() => {
+      document.title = originalTitle;
+    }, 100);
   };
 
   const handleTemplateChange = (templateId: TemplateType) => {

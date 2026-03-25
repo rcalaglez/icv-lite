@@ -63,6 +63,7 @@ export interface ResumeCertificate {
   date: string;
   issuer: string;
   url?: string;
+  keywords?: string;
 }
 
 export interface ResumePublication {
