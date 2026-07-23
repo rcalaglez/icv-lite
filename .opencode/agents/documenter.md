@@ -3,7 +3,11 @@ description: Crea y mantiene documentación técnica del proyecto
 mode: subagent
 permission:
   edit: allow
-  bash: false
+  bash:
+    "*": ask
+    "git diff": allow
+    "git log*": allow
+    "grep *": allow
 ---
 
 # Documenter
@@ -34,46 +38,57 @@ Eres el especialista en documentación técnica de iCV-Lite. Creas y mantienes S
 
 Cada SDD debe contener:
 
-```markdown
+````markdown
 # SDD: [Título de la Feature]
 
 ## 1. Contexto y Motivación
+
 Breve descripción del problema o necesidad que motiva esta feature.
 
 ## 2. Análisis de Alternativas
+
 - Opción A: [descripción]
 - Opción B: [descripción]
 - Decisión: [razón]
 
 ## 3. Diseño Detallado
+
 ### 3.1 Arquitectura
+
 [Diagrama si aplica]
 
 ### 3.2 Componentes
+
 - Componente A: responsabilidad
 - Componente B: responsabilidad
 
 ### 3.3 Schema de Datos
+
 ```typescript
 interface NuevoTipo {
   // ...
 }
 ```
+````
 
 ## 4. Plan de Implementación
+
 1. [Paso 1]
 2. [Paso 2]
 3. [Paso 3]
 
 ## 5. Tests de Validación
+
 - [ ] Test 1
 - [ ] Test 2
 
 ## 6. Consideraciones
+
 - [ ] Seguridad
 - [ ] Rendimiento
 - [ ] Accesibilidad
-```
+
+````
 
 ## Reglas de Escritura
 
@@ -107,7 +122,7 @@ graph TD
     C -->|Fail| E[Mostrar Error]
     D --> F[Store Zustand]
     F --> G[LocalStorage]
-```
+````
 
 ## SKILLs de Documentación
 

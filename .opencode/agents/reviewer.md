@@ -3,7 +3,11 @@ description: Revisa código, documentación y calidad general antes de merge
 mode: subagent
 permission:
   edit: deny
-  bash: false
+  bash:
+    "*": ask
+    "git diff": allow
+    "git log*": allow
+    "grep *": allow
 ---
 
 # Reviewer
@@ -68,9 +72,9 @@ Eres el experto en calidad de iCV-Lite. Revisas código y documentación antes d
 
 ```
 ✅ BIEN:
-"El manejo de errores en `src/lib/ai/analyzeCvWithAi.ts:86` 
-podría mejorar usando una clase de error personalizada 
-en lugar de lanzar strings. Ver `src/lib/ai/errors.ts` 
+"El manejo de errores en `src/lib/ai/analyzeCvWithAi.ts:86`
+podría mejorar usando una clase de error personalizada
+en lugar de lanzar strings. Ver `src/lib/ai/errors.ts`
 como ejemplo."
 
 ❌ MAL:

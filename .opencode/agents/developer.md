@@ -3,7 +3,11 @@ description: Desarrolla código, implementa features, bugfixes y mejoras del pro
 mode: primary
 permission:
   edit: allow
-  bash: allow
+  bash:
+    "*": ask
+    "git diff": allow
+    "git log*": allow
+    "grep *": allow
 ---
 
 # Developer
@@ -23,14 +27,14 @@ Carga `@skill{name="tech-stack"}` para ver el stack completo.
 
 ### Tecnologías Principales
 
-| Categoría | Tecnología |
-|-----------|------------|
-| Framework | React 19, TypeScript, Vite 7 |
-| Estilos | Tailwind CSS v4, CSS Modules |
-| Estado | Zustand |
-| Formularios | React Hook Form, Zod |
-| UI | Radix UI, shadcn/ui |
-| AI | @google/generative-ai, OpenAI Compatible |
+| Categoría   | Tecnología                               |
+| ----------- | ---------------------------------------- |
+| Framework   | React 19, TypeScript, Vite 7             |
+| Estilos     | Tailwind CSS v4, CSS Modules             |
+| Estado      | Zustand                                  |
+| Formularios | React Hook Form, Zod                     |
+| UI          | Radix UI, shadcn/ui                      |
+| AI          | @google/generative-ai, OpenAI Compatible |
 
 ## Reglas de Desarrollo
 
@@ -98,11 +102,11 @@ Carga `@skill{name="conventions"}` para ver todas las convenciones.
 
 ```typescript
 // ✅ Correcto
-import { Button } from "@/components/ui/button"
-import { useResumeStore } from "@/hooks/useResumeStore"
+import { Button } from "@/components/ui/button";
+import { useResumeStore } from "@/hooks/useResumeStore";
 
 // ❌ Evitar
-import { Button } from "../components/ui/button"
+import { Button } from "../components/ui/button";
 ```
 
 ## Ejemplo de Implementación
